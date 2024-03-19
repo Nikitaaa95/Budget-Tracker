@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+// App.js
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 const App = () => {
   const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(0);
-  //categories
+  const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([
-    { name: 'Housing', budget: 0 },
-    { name: 'Transportation', budget: 0 },
-    { name: 'Food', budget: 0 },
+    { name: "Housing", budget: 0, color: "#b27a03" },
+    { name: "Transportation", budget: 0, color: "#689fbd" },
+    { name: "Food", budget: 0, color: "#dbe8f8" },
+    // Add more categories as needed
   ]);
 
   const handleChange = (index, value) => {
@@ -19,12 +20,17 @@ const App = () => {
   };
 
   const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
+  const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+
+  const handleExpenseAdd = (amount, category, note) => {
+    setExpenses([...expenses, { amount, category, note }]);
+  };
 
   return (
     <div className="container mt-5">
       <div className="row">
         <div className="col-md-6">
-          <div className="card bg-primary text-white">
+          <div className="card" style={{ backgroundColor: "#280000", color: "#dbe8f8" }}>
             <div className="card-body">
               <h5 className="card-title">Income</h5>
               <p className="card-text">Total Income: {income}</p>
@@ -38,16 +44,22 @@ const App = () => {
           </div>
         </div>
         <div className="col-md-6">
-          <div className="card bg-danger text-white">
+          <div className="card" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
             <div className="card-body">
               <h5 className="card-title">Expenses</h5>
-              <p className="card-text">Total Expenses: {expenses}</p>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Enter expenses"
-                onChange={(e) => setExpenses(parseFloat(e.target.value))}
-              />
+              <p className="card-text">Total Expenses: {expenseTotal}</p>
+              <div className="mb-3">
+                <input type="number" className="form-control" placeholder="Amount" />
+                <select className="form-select mt-2" aria-label="Category">
+                  {categories.map((category, index) => (
+                    <option key={index} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                <textarea className="form-control mt-2" rows="2" placeholder="Note"></textarea>
+                <button className="btn btn-primary mt-2">Add Expense</button>
+              </div>
             </div>
           </div>
         </div>
@@ -57,15 +69,20 @@ const App = () => {
           <h2>Budget Categories</h2>
           {categories.map((category, index) => (
             <div key={index} className="mb-3">
-              <label htmlFor={`category-${index}`} className="form-label">{category.name}</label>
-              <input
-                id={`category-${index}`}
-                type="number"
-                className="form-control"
-                placeholder={`Enter budget for ${category.name}`}
-                value={category.budget}
-                onChange={(e) => handleChange(index, parseFloat(e.target.value))}
-              />
+              <label htmlFor={`category-${index}`} className="form-label">
+                {category.name}
+              </label>
+              <div className="input-group">
+                <input
+                  id={`category-${index}`}
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter budget for ${category.name}`}
+                  value={category.budget}
+                  onChange={(e) => handleChange(index, parseFloat(e.target.value))}
+                />
+                <span className="input-group-text">{((category.budget / income) * 100).toFixed(2)}%</span>
+              </div>
             </div>
           ))}
           <h4>Total Budget: {totalBudget}</h4>
