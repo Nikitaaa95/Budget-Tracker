@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -12,6 +11,8 @@ const App = () => {
     { name: "Food", budget: 0, color: "#dbe8f8" },
     // Add more categories as needed
   ]);
+  const [newIncome, setNewIncome] = useState(0);
+  const [newExpense, setNewExpense] = useState({ amount: 0, category: "", note: "" });
 
   const handleChange = (index, value) => {
     const newCategories = [...categories];
@@ -22,8 +23,14 @@ const App = () => {
   const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
   const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
 
-  const handleExpenseAdd = (amount, category, note) => {
-    setExpenses([...expenses, { amount, category, note }]);
+  const handleAddIncome = () => {
+    setIncome(income + newIncome);
+    setNewIncome(0);
+  };
+
+  const handleAddExpense = () => {
+    setExpenses([...expenses, newExpense]);
+    setNewExpense({ amount: 0, category: "", note: "" });
   };
 
   return (
@@ -34,12 +41,16 @@ const App = () => {
             <div className="card-body">
               <h5 className="card-title">Income</h5>
               <p className="card-text">Total Income: {income}</p>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Enter income"
-                onChange={(e) => setIncome(parseFloat(e.target.value))}
-              />
+              <div className="input-group mb-3">
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Enter income"
+                  value={newIncome}
+                  onChange={(e) => setNewIncome(parseFloat(e.target.value))}
+                />
+                <button className="btn btn-primary" onClick={handleAddIncome}>Add</button>
+              </div>
             </div>
           </div>
         </div>
@@ -49,16 +60,34 @@ const App = () => {
               <h5 className="card-title">Expenses</h5>
               <p className="card-text">Total Expenses: {expenseTotal}</p>
               <div className="mb-3">
-                <input type="number" className="form-control" placeholder="Amount" />
-                <select className="form-select mt-2" aria-label="Category">
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Amount"
+                  value={newExpense.amount}
+                  onChange={(e) => setNewExpense({ ...newExpense, amount: parseFloat(e.target.value) })}
+                />
+                <select
+                  className="form-select mt-2"
+                  aria-label="Category"
+                  value={newExpense.category}
+                  onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+                >
+                  <option value="">Select Category</option>
                   {categories.map((category, index) => (
                     <option key={index} value={category.name}>
                       {category.name}
                     </option>
                   ))}
                 </select>
-                <textarea className="form-control mt-2" rows="2" placeholder="Note"></textarea>
-                <button className="btn btn-primary mt-2">Add Expense</button>
+                <textarea
+                  className="form-control mt-2"
+                  rows="2"
+                  placeholder="Note"
+                  value={newExpense.note}
+                  onChange={(e) => setNewExpense({ ...newExpense, note: e.target.value })}
+                ></textarea>
+                <button className="btn btn-primary mt-2" onClick={handleAddExpense}>Add Expense</button>
               </div>
             </div>
           </div>
@@ -68,7 +97,7 @@ const App = () => {
         <div className="col-md-12">
           <h2>Budget Categories</h2>
           {categories.map((category, index) => (
-            <div key={index} className="mb-3">
+            <div key={index} className="mb-3" style={{ backgroundColor: category.color, padding: "10px", color: "#fff" }}>
               <label htmlFor={`category-${index}`} className="form-label">
                 {category.name}
               </label>
