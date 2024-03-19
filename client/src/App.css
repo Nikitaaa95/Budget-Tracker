@@ -22,3 +22,8 @@
   background-color: #dbe8f8;
   padding: 50px;
 }
+.btn-primary {
+  background-color: #689fbd;
+  border: none;
+}
+
