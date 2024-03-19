@@ -1,7 +1,7 @@
 {
   "name": "tech-friends",
   "version": "1.0.0",
-  "description": "",
+  "description": "tracks budgets",
   "main": "server/server.js",
   "scripts": {
     "start": "node server --ignore client",
