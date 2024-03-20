@@ -1,7 +1,5 @@
 import { useQuery } from '@apollo/client';
-
-import ProfileList from '../components/ProfileList';
-
+import Profile from '../components/Profile';
 import { QUERY_PROFILES } from '../utils/queries';
 
 const Home = () => {
@@ -15,10 +13,9 @@ const Home = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            <ProfileList
-              profiles={profiles}
-              title="Here's the current roster of friends..."
-            />
+            profiles.map(profile => (
+              <Profile key={profile.id} profile={profile} />
+            ))
           )}
         </div>
       </div>
