@@ -13,7 +13,7 @@ const Header = () => {
     <header className="bg-info text-dark mb-4 py-3 display-flex align-center">
       <div className="container flex-column justify-space-between-lg justify-center align-center text-center">
         <Link className="text-dark" to="/">
-          <h1 className="m-0" style={{ fontSize: '3rem' }}>
+          <h1 className="text-center py-3" style={{ fontSize: '3rem' }}>
             Budget Tracker
           </h1>
         </Link>
