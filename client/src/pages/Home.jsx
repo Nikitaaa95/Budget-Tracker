@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import Profile from '/Profile';
+import Profile from './Profile';
 import { QUERY_PROFILES } from '../utils/queries';
 
 const Home = () => {
