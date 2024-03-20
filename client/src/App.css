@@ -25,5 +25,26 @@
 .btn-primary {
   background-color: #689fbd;
   border: none;
+  margin-left: 50px;
 }
 
+.landing-container {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+background-color: #dbe8f8;
+}
+
+.landing-content {
+text-align: center;
+}
+
+.button-container {
+margin-top: 20px;
+}
+
+.btn-primary:hover {
+background-color: #689fbd;
+border-color: #689fbd;
+}
