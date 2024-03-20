@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 
-function MainPage() {
+function profile() {
     const [income, setIncome] = useState(0);
     const [expenses, setExpenses] = useState([]);
     const [categories, setCategories] = useState([
