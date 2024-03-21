@@ -1,7 +1,7 @@
 import { Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
-import SkillsList from '../components/SkillsList';
+import Tracker from '../components/Tracker';
 
 import { QUERY_SINGLE_PROFILE, QUERY_ME } from '../utils/queries';
 
@@ -47,8 +47,7 @@ const Profile = () => {
       </h2>
 
       {profile.skills?.length > 0 && (
-        <SkillsList
-          skills={profile.skills}
+        <Tracker
           isLoggedInUser={!profileId && true}
         />
       )}
