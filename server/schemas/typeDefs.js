@@ -29,8 +29,9 @@ type Income {
 
     addIncome(label: String!, amount: Int!): Income
     removeIncome(incomeId: ID!): Income
+    updateIncome(label: String!, amount: Int!, incomeId: ID!) : Income
+    
     removeProfile: Profile
-    # removeSkill(skill: String!): Profile
   }
 `;
 
