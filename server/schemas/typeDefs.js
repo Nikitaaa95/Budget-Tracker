@@ -30,7 +30,7 @@ type Income {
     addIncome(label: String!, amount: Int!): Income
     removeIncome(incomeId: ID!): Income
     removeProfile: Profile
-    removeSkill(skill: String!): Profile
+    # removeSkill(skill: String!): Profile
   }
 `;
 

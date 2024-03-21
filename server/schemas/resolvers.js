@@ -91,17 +91,17 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
-    // Make it so a logged in user can only remove a skill from their own profile
-    removeSkill: async (parent, { skill }, context) => {
-      if (context.user) {
-        return Profile.findOneAndUpdate(
-          { _id: context.user._id },
-          { $pull: { skills: skill } },
-          { new: true }
-        );
-      }
-      throw AuthenticationError;
-    },
+    // // Make it so a logged in user can only remove a skill from their own profile
+    // removeSkill: async (parent, { skill }, context) => {
+    //   if (context.user) {
+    //     return Profile.findOneAndUpdate(
+    //       { _id: context.user._id },
+    //       { $pull: { skills: skill } },
+    //       { new: true }
+    //     );
+    //   }
+    //   throw AuthenticationError;
+    // },
   },
 };
 
