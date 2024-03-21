@@ -4,14 +4,18 @@ const typeDefs = `
     name: String
     email: String
     password: String
-    skills: [String]!
+    income: [Income]
   }
 
   type Auth {
     token: ID!
     profile: Profile
   }
-
+type Income {
+  _id: ID
+  label: String!
+  amount: Int!
+}
   type Query {
     profiles: [Profile]!
     profile(profileId: ID!): Profile
@@ -23,7 +27,8 @@ const typeDefs = `
     addProfile(name: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
 
-    addSkill(profileId: ID!, skill: String!): Profile
+    addIncome(label: String!, amount: Int!): Income
+    removeIncome(incomeId: ID!): Income
     removeProfile: Profile
     removeSkill(skill: String!): Profile
   }
