@@ -4,7 +4,7 @@ import { QUERY_PROFILES } from '../utils/queries';
 
 const Home = () => {
   const { loading, data } = useQuery(QUERY_PROFILES);
-  const profiles = data?.profiles || [];
+  const profile = data?.profiles || {};
 
   return (
     <main>
@@ -13,9 +13,7 @@ const Home = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            profiles.map(profile => (
-              <Profile key={profile.id} profile={profile} />
-            ))
+            <Profile key={profile.id} profile={profile} />
           )}
         </div>
       </div>

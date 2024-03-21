@@ -21,7 +21,6 @@ const Profile = () => {
   // Check if data is returning from the `QUERY_ME` query, then the `QUERY_SINGLE_PROFILE` query
   const profile = data?.me || data?.profile || {};
 
-  // Use React Router's `<Navigate />` component to redirect to personal profile page if username is yours
   if (Auth.loggedIn() && Auth.getProfile().data._id === profileId) {
     return <Navigate to="/me" />;
   }
@@ -42,9 +41,6 @@ const Profile = () => {
   return (
     <>
       <Tracker isLoggedInUser={!profileId && true} />
-      <div className="my-4 p-4" style={{ border: '1px dotted #1a1a1a' }}>
-        {/* Additional content for the profile page */}
-      </div>
     </>
   );
 };
