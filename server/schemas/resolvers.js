@@ -1,5 +1,5 @@
-const { Profile } = require('../models');
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { Profile, Income } = require("../models");
+const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   Query: {
@@ -44,23 +44,46 @@ const resolvers = {
     },
 
     // Add a third argument to the resolver to access data in our `context`
-    addSkill: async (parent, { profileId, skill }, context) => {
+    addIncome: async (parent, { label, amount }, context) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
       if (context.user) {
-        return Profile.findOneAndUpdate(
-          { _id: profileId },
+        const income = await Income.create({
+          label,
+          amount,
+        });
+
+        await Profile.findOneAndUpdate(
+          { _id: context.user._id },
           {
-            $addToSet: { skills: skill },
+            $addToSet: { income: income },
           },
           {
             new: true,
             runValidators: true,
           }
         );
+        return income;
       }
       // If user attempts to execute this mutation and isn't logged in, throw an error
       throw AuthenticationError;
     },
+
+    // remove an income line
+    removeIncome: async (parent, { incomeId }, context) => {
+      if (context.user) {
+        const income = await Income.findOneAndDelete({
+          _id: incomeId,
+        });
+
+        await Profile.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { income: income._id } }
+        );
+        return income;
+      }
+      throw AuthenticationError;
+    },
+
     // Set up mutation so a logged in user can only remove their profile and no one else's
     removeProfile: async (parent, args, context) => {
       if (context.user) {

@@ -1,3 +1,4 @@
-const Profile = require('./Profile');
+const Profile = require("./Profile");
+const Income = require("./Income");
 
-module.exports = { Profile };
+module.exports = { Profile, Income };
