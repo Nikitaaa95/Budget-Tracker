@@ -17,7 +17,7 @@ export const ADD_INCOME = gql`
     addIncome(profileId: $profileId, income: $income) {
       _id
       name
-      incomes
+      income
     }
   }
 `;
