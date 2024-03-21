@@ -84,6 +84,30 @@ const resolvers = {
       throw AuthenticationError;
     },
 
+    updateIncome: async (parent, { incomeId, label, amount }, context) => {
+      //checks if user is logged in
+      if (context.user) {
+        try {
+          // find income doc using ID
+          const income = await Income.findById(incomeId);
+
+          // update the income with new data
+          income.label = label;
+          income.amount = amount;
+          await income.save();
+
+          return income;
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      } else {
+        //If user is not logged in throw auth err
+        throw new AuthenticationError(
+          "You must be logged in to perform this action"
+        );
+      }
+    },
+
     // Set up mutation so a logged in user can only remove their profile and no one else's
     removeProfile: async (parent, args, context) => {
       if (context.user) {
@@ -91,18 +115,6 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
-    // // Make it so a logged in user can only remove a skill from their own profile
-    // removeSkill: async (parent, { skill }, context) => {
-    //   if (context.user) {
-    //     return Profile.findOneAndUpdate(
-    //       { _id: context.user._id },
-    //       { $pull: { skills: skill } },
-    //       { new: true }
-    //     );
-    //   }
-    //   throw AuthenticationError;
-    // },
   },
 };
-
 module.exports = resolvers;
