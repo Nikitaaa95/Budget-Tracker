@@ -13,13 +13,13 @@ export const ADD_PROFILE = gql`
 `;
 
 export const ADD_INCOME = gql`
-  mutation addIncome($profileId: ID!, $income: String!) {
-    addIncome(profileId: $profileId, income: $income) {
-      _id
-      name
-      income
-    }
+mutation AddIncome($label: String!, $amount: Int!) {
+  addIncome(label: $label, amount: $amount) {
+    _id
+    amount
+    label
   }
+}
 `;
 
 export const LOGIN_USER = gql`
@@ -35,11 +35,11 @@ export const LOGIN_USER = gql`
 `;
 
 export const REMOVE_INCOME = gql`
-  mutation removeIncome($income: String!) {
-    removeIncome(income: $income) {
-      _id
-      name
-      income
-    }
+mutation RemoveIncome($incomeId: ID!) {
+  removeIncome(incomeId: $incomeId) {
+    _id
+    amount
+    label
   }
+}
 `;
