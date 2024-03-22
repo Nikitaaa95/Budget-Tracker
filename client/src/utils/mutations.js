@@ -43,3 +43,51 @@ mutation RemoveIncome($incomeId: ID!) {
   }
 }
 `;
+
+export const UPDATE_INCOME = gql`
+mutation UpdateIncome($label: String!, $amount: Int!, $incomeId: ID!) {
+  updateIncome(label: $label, amount: $amount, incomeId: $incomeId) {
+    _id
+    amount
+    label
+  }
+}
+`;
+
+export const ADD_EXPENSE = gql`
+mutation AddExpense($label: String!, $amount: Int!) {
+  addExpense(label: $label, amount: $amount) {
+    _id
+    amount
+    label
+  }
+}
+`;
+
+export const UPDATE_EXPENSE = gql`
+mutation UpdateExpense($label: String!, $amount: Int!, $expenseId: ID!) {
+  updateExpense(label: $label, amount: $amount, expenseId: $expenseId) {
+    _id
+    amount
+    label
+  }
+}
+`;
+
+export const REMOVE_EXPENSE = gql`
+mutation RemoveExpense($expenseId: ID!) {
+  removeExpense(expenseId: $expenseId) {
+    _id
+    amount
+    label
+  }
+}`;
+
+export const REMOVE_PROFILE = gql`
+mutation RemoveProfile {
+  removeProfile {
+    _id
+    name
+  }
+}`;
+

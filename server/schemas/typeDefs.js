@@ -23,14 +23,26 @@ type Income {
     me: Profile
   }
 
+  type Expense {
+  _id: ID
+  label: String!
+  amount: Int!
+}
+
   type Mutation {
     addProfile(name: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
 
     addIncome(label: String!, amount: Int!): Income
     removeIncome(incomeId: ID!): Income
+    updateIncome(label: String!, amount: Int!, incomeId: ID!) : Income
+
+    addExpense(label: String!, amount: Int!): Expense
+    removeExpense(expenseId: ID!): Expense
+    updateExpense(label: String!, amount: Int!, expenseId: ID!) : Expense
+
+    
     removeProfile: Profile
-    # removeSkill(skill: String!): Profile
   }
 `;
 
