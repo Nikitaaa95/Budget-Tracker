@@ -45,3 +45,15 @@ query Me {
     }
   }
 }`;
+
+// export const QUERY_INCOME = gql`
+// query QueryIncome($thoughtId: ID!) {
+//   income(thoughtId: $thoughtId) {
+//     _id
+//     amount
+//     label
+//   }
+// }
+// }`;
+
+

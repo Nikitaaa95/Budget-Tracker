@@ -14,7 +14,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^5.1.0"
+    "concurrently": "^5.1.0",
+    "vite-plugin-pwa": "^0.19.7"
   },
   "dependencies": {
     "mongodb": "^6.5.0"
