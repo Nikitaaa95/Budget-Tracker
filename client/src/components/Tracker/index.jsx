@@ -20,6 +20,14 @@ function MainPage() {
       setCategories(newCategories);
     };
   
+    const [addThought, { error }] = useMutation
+    (ADD_INCOME, {
+      refetchQueries: [
+        QUERY_INCOME,
+        'getThoughts'
+      ]
+    });
+  
     const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
     const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   
