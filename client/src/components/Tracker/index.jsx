@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import '../../App.css';
+import { ADD_INCOME } from '../../utils/mutations';
+import { QUERY_ME } from '../../utils/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import Auth from '../../utils/auth';
 
 function MainPage() {
     const [income, setIncome] = useState(0);
@@ -10,24 +14,68 @@ function MainPage() {
       { name: "Food", budget: 0, color: "#b27a03" },
       // Add more categories as needed
     ]);
+
+    const {data, loading } = useQuery(QUERY_ME)
+  
+    const profileData = data?.me || {}
+    console.log(profileData)
+
     const [newIncome, setNewIncome] = useState(0);
     const [newExpense, setNewExpense] = useState({ amount: 0, category: "", note: "" });
     const [newCategory, setNewCategory] = useState({ name: "", budget: 0, color: "#ffffff" });
   
-    const handleChange = (index, value) => {
-      const newCategories = [...categories];
-      newCategories[index].budget = value;
-      setCategories(newCategories);
-    };
-  
+    // const handleChange = (index, value) => {
+    //   const newCategories = [...categories];
+    //   newCategories[index].budget = value;
+    //   setCategories(newCategories);
+    // };
+
+    useEffect(()=> {}) 
+
+    const totalIncome = income.reduce((acc, curr) => acc + curr.budget, 0);
     const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
     const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   
-    const handleAddIncome = () => {
-      setIncome(income + newIncome);
-      setNewIncome(0);
-    };
+    // const handleAddIncome = () => {
+    //   setIncome(income + newIncome);
+    //   setNewIncome(0);
+    // };
   
+    const [addIncome, { error }] = useMutation
+    (ADD_INCOME, {
+      // refetchQueries: [
+      //   QUERY_INCOME,
+      //   'getIncome'
+      // ]
+    });
+  
+    const handleAddIncome = async (event) => {
+      event.preventDefault();
+  
+      try {
+        const { data } = await addIncome({
+          variables: {
+            amount:parseInt(income)
+            // income,
+            // incomeAuthor: Auth.getProfile().data.username,
+          },
+        });
+        console.log(data)
+        setIncome('');
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const handleChange = (event) => {
+      const { name, value } = event.target;
+  
+      if (name === 'incomeText' && value.length <= 280) {
+        setIncome(value);
+        // setCharacterCount(value.length);
+      }
+    };
+
     const handleAddExpense = () => {
       const updatedCategories = categories.map((category) => {
         if (category.name === newExpense.category) {
@@ -48,6 +96,9 @@ function MainPage() {
       setNewCategory({ name: "", budget: 0, color: "#ffffff" });
     };
 
+    if (loading) {
+      return <p>Loading...</p>
+    }
   return (
     <div className="background container mt-5"> 
       <div className="row">
@@ -57,18 +108,58 @@ function MainPage() {
               <h5 className="card-title">Income</h5>
               <p className="card-text">Total Income: {income}</p>
               <div className="input-group mb-3">
-                <input
+                {/* <input
                   type="number"
                   className="form-control"
                   placeholder="Enter income"
                   value={newIncome}
                   onChange={(e) => setNewIncome(parseFloat(e.target.value))}
-                />
-                <button className="btn btn-primary" onClick={handleAddIncome}>Add</button>
+                /> */}
+
+<form
+            className="flex-row justify-center justify-space-between-md align-center"
+            onSubmit={handleAddIncome}
+          >
+            <div className="col-12 col-lg-9">
+              <textarea
+                name="incomeText"
+                placeholder="Add Your Income Here"
+                value={income}
+                className="form-input w-100"
+                style={{ lineHeight: '1.5', resize: 'vertical' }}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+
+            <div className="col-12 col-lg-3">
+              <button className="btn btn-primary btn-block py-3" type="submit">
+                Add Income
+              </button>
+            </div>
+            {error && (
+              <div className="col-12 my-3 bg-danger text-white p-3">
+                {error.message}
               </div>
+            )}
+          </form>
+
+                {/* <button className="btn btn-primary" onClick={handleAddIncome}>Add</button> */}
+              </div>
+              {/* <div className="col-12 col-lg-9">
+              <textarea
+                name="incomeText"
+                placeholder="Here's a new thought..."
+                value={income}
+                className="form-input w-100"
+                style={{ lineHeight: '1.5', resize: 'vertical' }}
+                onChange={handleChange}
+              ></textarea>
+            </div> */}
             </div>
           </div>
         </div>
+
+
         <div className="col-md-6 d-flex">
           <div className="card flex-grow-1" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
             <div className="card-body d-flex flex-column justify-content-between">

@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const incomeSchema = new Schema({
   label: {
     type: String,
-    required: true,
+    // required: true,
   },
   amount: {
     type: Number,

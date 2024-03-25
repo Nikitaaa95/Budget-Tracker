@@ -17,6 +17,12 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
+    // income: async (parent, { incomeId }) => {
+    //   return Income.findOne({ _id: incomeId });
+    // },
+    // expense: async (parent, { expenseId }) => {
+    //   return Expense.findOne({ _id: expenseId });
+    // },
   },
 
   Mutation: {
