@@ -1,167 +1,119 @@
-import React, { useEffect, useState } from "react";
-import '../../App.css';
-import { ADD_INCOME } from '../../utils/mutations';
-import { QUERY_ME } from '../../utils/queries';
-import { useMutation, useQuery } from '@apollo/client';
-import Auth from '../../utils/auth';
+import React, { useEffect, useState, useRef } from "react";
+import "../../App.css";
+import { QUERY_ME } from "../../utils/queries";
+import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { ADD_INCOME } from "../../utils/mutations";
 
 function MainPage() {
-    const [income, setIncome] = useState(0);
-    const [expenses, setExpenses] = useState([]);
-    const [categories, setCategories] = useState([
-      { name: "Housing", budget: 0, color: "#b27a03" },
-      { name: "Transportation", budget: 0, color: "#689fbd" },
-      { name: "Food", budget: 0, color: "#b27a03" },
-      // Add more categories as needed
-    ]);
-
-    const {data, loading } = useQuery(QUERY_ME)
   
-    const profileData = data?.me || {}
-    console.log(profileData)
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([
+    { name: "Housing", budget: 0, color: "#b27a03" },
+    { name: "Transportation", budget: 0, color: "#689fbd" },
+    { name: "Food", budget: 0, color: "#b27a03" },
+    // Add more categories as needed
+  ]);
+  const [newIncome, setNewIncome] = useState(0);
+  const [newExpense, setNewExpense] = useState({
+    amount: 0,
+    category: "",
+    note: "",
+  });
+  const [newCategory, setNewCategory] = useState({
+    name: "",
+    budget: 0,
+    color: "#ffffff",
+  });
 
-    const [newIncome, setNewIncome] = useState(0);
-    const [newExpense, setNewExpense] = useState({ amount: 0, category: "", note: "" });
-    const [newCategory, setNewCategory] = useState({ name: "", budget: 0, color: "#ffffff" });
-  
-    // const handleChange = (index, value) => {
-    //   const newCategories = [...categories];
-    //   newCategories[index].budget = value;
-    //   setCategories(newCategories);
-    // };
+  const { data, loading } = useQuery(QUERY_ME);
+  const userData = data?.me || {};
 
-    useEffect(()=> {}) 
 
-    const totalIncome = income.reduce((acc, curr) => acc + curr.budget, 0);
-    const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
-    const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-  
-    // const handleAddIncome = () => {
-    //   setIncome(income + newIncome);
-    //   setNewIncome(0);
-    // };
-  
-    const [addIncome, { error }] = useMutation
-    (ADD_INCOME, {
-      // refetchQueries: [
-      //   QUERY_INCOME,
-      //   'getIncome'
-      // ]
+  const [addIncome] = useMutation(ADD_INCOME);
+
+  const handleChange = (index, value) => {
+    const newCategories = [...categories];
+    newCategories[index].budget = value;
+    setCategories(newCategories);
+  };
+
+  useEffect(() => {
+    console.log("use effect");
+    setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
+    console.log(income);
+  }, []);
+
+  const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
+  const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+
+  const handleAddIncome = async () => {
+    const {data} = await addIncome({
+      variables: {
+        amount: parseFloat(newIncome),
+      },  
     });
-  
-    const handleAddIncome = async (event) => {
-      event.preventDefault();
-  
-      try {
-        const { data } = await addIncome({
-          variables: {
-            amount:parseInt(income)
-            // income,
-            // incomeAuthor: Auth.getProfile().data.username,
-          },
-        });
-        console.log(data)
-        setIncome('');
-      } catch (err) {
-        console.error(err);
+
+    console.log(data)
+    setIncome(prev => prev + data.addIncome.amount)
+    setNewIncome(0)
+
+  };
+
+  const handleAddExpense = () => {
+    const updatedCategories = categories.map((category) => {
+      if (category.name === newExpense.category) {
+        return {
+          ...category,
+          budget: category.budget + newExpense.amount,
+        };
       }
-    };
+      return category;
+    });
+    setCategories(updatedCategories);
+    setExpenses([...expenses, newExpense]);
+    setNewExpense({ amount: 0, category: "", note: "" });
+  };
 
-    const handleChange = (event) => {
-      const { name, value } = event.target;
-  
-      if (name === 'incomeText' && value.length <= 280) {
-        setIncome(value);
-        // setCharacterCount(value.length);
-      }
-    };
+  const handleAddCategory = () => {
+    setCategories([...categories, newCategory]);
+    setNewCategory({ name: "", budget: 0, color: "#ffffff" });
+  };
 
-    const handleAddExpense = () => {
-      const updatedCategories = categories.map((category) => {
-        if (category.name === newExpense.category) {
-          return {
-            ...category,
-            budget: category.budget + newExpense.amount,
-          };
-        }
-        return category;
-      });
-      setCategories(updatedCategories);
-      setExpenses([...expenses, newExpense]);
-      setNewExpense({ amount: 0, category: "", note: "" });
-    };
-  
-    const handleAddCategory = () => {
-      setCategories([...categories, newCategory]);
-      setNewCategory({ name: "", budget: 0, color: "#ffffff" });
-    };
+  if (loading) return <p>LOADING...</p>;
 
-    if (loading) {
-      return <p>Loading...</p>
-    }
   return (
-    <div className="background container mt-5"> 
+    <div className="background container mt-5">
       <div className="row">
         <div className="col-md-6 d-flex">
-          <div className="card flex-grow-1" style={{ backgroundColor: "#280000", color: "#dbe8f8" }}>
+          <div
+            className="card flex-grow-1"
+            style={{ backgroundColor: "#280000", color: "#dbe8f8" }}
+          >
             <div className="card-body d-flex flex-column justify-content-between">
               <h5 className="card-title">Income</h5>
               <p className="card-text">Total Income: {income}</p>
               <div className="input-group mb-3">
-                {/* <input
+                <input
                   type="number"
                   className="form-control"
                   placeholder="Enter income"
                   value={newIncome}
                   onChange={(e) => setNewIncome(parseFloat(e.target.value))}
-                /> */}
-
-<form
-            className="flex-row justify-center justify-space-between-md align-center"
-            onSubmit={handleAddIncome}
-          >
-            <div className="col-12 col-lg-9">
-              <textarea
-                name="incomeText"
-                placeholder="Add Your Income Here"
-                value={income}
-                className="form-input w-100"
-                style={{ lineHeight: '1.5', resize: 'vertical' }}
-                onChange={handleChange}
-              ></textarea>
-            </div>
-
-            <div className="col-12 col-lg-3">
-              <button className="btn btn-primary btn-block py-3" type="submit">
-                Add Income
-              </button>
-            </div>
-            {error && (
-              <div className="col-12 my-3 bg-danger text-white p-3">
-                {error.message}
+                />
+                <button className="btn btn-primary" onClick={handleAddIncome}>
+                  Add
+                </button>
               </div>
-            )}
-          </form>
-
-                {/* <button className="btn btn-primary" onClick={handleAddIncome}>Add</button> */}
-              </div>
-              {/* <div className="col-12 col-lg-9">
-              <textarea
-                name="incomeText"
-                placeholder="Here's a new thought..."
-                value={income}
-                className="form-input w-100"
-                style={{ lineHeight: '1.5', resize: 'vertical' }}
-                onChange={handleChange}
-              ></textarea>
-            </div> */}
             </div>
           </div>
         </div>
-
-
         <div className="col-md-6 d-flex">
-          <div className="card flex-grow-1" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
+          <div
+            className="card flex-grow-1"
+            style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}
+          >
             <div className="card-body d-flex flex-column justify-content-between">
               <h5 className="card-title">Expenses</h5>
               <p className="card-text">Total Expenses: {expenseTotal}</p>
@@ -171,13 +123,20 @@ function MainPage() {
                   className="form-control"
                   placeholder="Amount"
                   value={newExpense.amount}
-                  onChange={(e) => setNewExpense({ ...newExpense, amount: parseFloat(e.target.value) })}
+                  onChange={(e) =>
+                    setNewExpense({
+                      ...newExpense,
+                      amount: parseFloat(e.target.value),
+                    })
+                  }
                 />
                 <select
                   className="form-select mt-2"
                   aria-label="Category"
                   value={newExpense.category}
-                  onChange={(e) => setNewExpense({ ...newExpense, category: e.target.value })}
+                  onChange={(e) =>
+                    setNewExpense({ ...newExpense, category: e.target.value })
+                  }
                 >
                   <option value="">Select Category</option>
                   {categories.map((category, index) => (
@@ -191,9 +150,16 @@ function MainPage() {
                   rows="2"
                   placeholder="Note"
                   value={newExpense.note}
-                  onChange={(e) => setNewExpense({ ...newExpense, note: e.target.value })}
+                  onChange={(e) =>
+                    setNewExpense({ ...newExpense, note: e.target.value })
+                  }
                 ></textarea>
-                <button className="btn btn-primary mt-2" onClick={handleAddExpense}>Add Expense</button>
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handleAddExpense}
+                >
+                  Add Expense
+                </button>
               </div>
             </div>
           </div>
@@ -203,7 +169,15 @@ function MainPage() {
         <div className="col-md-12">
           <h2>Budget Categories</h2>
           {categories.map((category, index) => (
-            <div key={index} className="mb-3" style={{ backgroundColor: category.color, padding: "10px", color: "#fff" }}>
+            <div
+              key={index}
+              className="mb-3"
+              style={{
+                backgroundColor: category.color,
+                padding: "10px",
+                color: "#fff",
+              }}
+            >
               <label htmlFor={`category-${index}`} className="form-label">
                 {category.name}
               </label>
@@ -214,9 +188,13 @@ function MainPage() {
                   className="form-control"
                   placeholder={`Enter budget for ${category.name}`}
                   value={category.budget}
-                  onChange={(e) => handleChange(index, parseFloat(e.target.value))}
+                  onChange={(e) =>
+                    handleChange(index, parseFloat(e.target.value))
+                  }
                 />
-                <span className="input-group-text">{((category.budget / income) * 100).toFixed(2)}%</span>
+                <span className="input-group-text">
+                  {((category.budget / income) * 100).toFixed(2)}%
+                </span>
               </div>
             </div>
           ))}
@@ -225,7 +203,10 @@ function MainPage() {
       </div>
       <div className="row mt-5">
         <div className="col-md-6">
-          <div className="card" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
+          <div
+            className="card"
+            style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}
+          >
             <div className="card-body">
               <h5 className="card-title">Add New Category</h5>
               <div className="mb-3">
@@ -234,22 +215,36 @@ function MainPage() {
                   className="form-control"
                   placeholder="Category Name"
                   value={newCategory.name}
-                  onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewCategory({ ...newCategory, name: e.target.value })
+                  }
                 />
                 <input
                   type="number"
                   className="form-control mt-2"
                   placeholder="Budget"
                   value={newCategory.budget}
-                  onChange={(e) => setNewCategory({ ...newCategory, budget: parseFloat(e.target.value) })}
+                  onChange={(e) =>
+                    setNewCategory({
+                      ...newCategory,
+                      budget: parseFloat(e.target.value),
+                    })
+                  }
                 />
                 <input
                   type="color"
                   className="form-control mt-2"
                   value={newCategory.color}
-                  onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
+                  onChange={(e) =>
+                    setNewCategory({ ...newCategory, color: e.target.value })
+                  }
                 />
-                <button className="btn btn-primary mt-2" onClick={handleAddCategory}>Add Category</button>
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handleAddCategory}
+                >
+                  Add Category
+                </button>
               </div>
             </div>
           </div>
@@ -260,3 +255,4 @@ function MainPage() {
 }
 
 export default MainPage;
+
