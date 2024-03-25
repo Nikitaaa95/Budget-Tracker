@@ -11,6 +11,10 @@ const expenseSchema = new Schema({
     type: Number,
     required: true,
   },
+  note: {
+    type: String,
+    required: false,
+  },
 });
 
 const Expense = model("Expense", expenseSchema);
