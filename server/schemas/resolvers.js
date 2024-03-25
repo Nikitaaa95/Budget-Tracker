@@ -110,12 +110,13 @@ const resolvers = {
 
     // expense resolvers
 
-    addExpense: async (parent, { label, amount }, context) => {
+    addExpense: async (parent, { label, amount, note }, context) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
       if (context.user) {
         const expense = await Expense.create({
           label,
           amount,
+          note,
         });
 
         await Profile.findOneAndUpdate(
@@ -159,6 +160,7 @@ const resolvers = {
           // update the income with new data
           expense.label = label;
           expense.amount = amount;
+          expense.note = note;
           await expense.save();
 
           return expense;

@@ -37,9 +37,9 @@ type Income {
     removeIncome(incomeId: ID!): Income
     updateIncome(label: String!, amount: Int!, incomeId: ID!) : Income
 
-    addExpense(label: String!, amount: Int!): Expense
+    addExpense(label: String!, amount: Int!, note: String): Expense
     removeExpense(expenseId: ID!): Expense
-    updateExpense(label: String!, amount: Int!, expenseId: ID!) : Expense
+    updateExpense(label: String!, amount: Int!, expenseId: ID!, note: String) : Expense
 
     
     removeProfile: Profile
