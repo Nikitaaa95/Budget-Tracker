@@ -2,65 +2,70 @@ import React, { useState } from "react";
 import '../../App.css';
 
 function MainPage() {
-    const [income, setIncome] = useState(0);
-    const [expenses, setExpenses] = useState([]);
-    const [categories, setCategories] = useState([
-      { name: "Housing", budget: 0, color: "#b27a03" },
-      { name: "Transportation", budget: 0, color: "#689fbd" },
-      { name: "Food", budget: 0, color: "#b27a03" },
-      // Add more categories as needed
-    ]);
-    const [newIncome, setNewIncome] = useState(0);
-    const [newExpense, setNewExpense] = useState({ amount: 0, category: "", note: "" });
-    const [newCategory, setNewCategory] = useState({ name: "", budget: 0, color: "#ffffff" });
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([
+    { name: "Housing", budget: 0, color: "#b27a03", expenses: [] },
+    { name: "Transportation", budget: 0, color: "#689fbd", expenses: [] },
+    { name: "Food", budget: 0, color: "#3a923a", expenses: [] },
+  ]);
+
+  const [newIncome, setNewIncome] = useState(0);
+  const [newExpense, setNewExpense] = useState({ amount: 0, category: "", note: "" });
+  const [newCategory, setNewCategory] = useState({ name: "", budget: 0 });
+
+  const handleChange = (index, value) => {
+    const newCategories = [...categories];
+    newCategories[index].budget = value;
+    setCategories(newCategories);
+  };
+
+  const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
+  const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+
+  const handleAddIncome = () => {
+    setIncome(income + newIncome);
+    setNewIncome(0);
+  };
+
+  const handleAddExpense = () => {
+    const updatedCategories = categories.map((category) => {
+      if (category.name === newExpense.category) {
+        return {
+          ...category,
+          budget: category.budget + newExpense.amount,
+          expenses: [...category.expenses, newExpense],
+        };
+      }
+      return category;
+    });
+    setCategories(updatedCategories);
+    setExpenses([...expenses, newExpense]);
+    setNewExpense({ amount: 0, category: "", note: "" });
+  };
+
+  const handleAddCategory = () => {
+    const color = getRandomColor(); // Generate a random color
+    setCategories([...categories, { ...newCategory, color, expenses: [] }]);
+    setNewCategory({ name: "", budget: 0 });
+  };
   
-    const handleAddExpense = () => {
-      const updatedCategories = categories.map((category) => {
-        if (category.name === newExpense.category) {
-          return {
-            ...category,
-            budget: category.budget + newExpense.amount,
-            expenses: [...category.expenses, newExpense],
-          };
-        }
-        return category;
-      });
-      setCategories(updatedCategories);
-      setExpenses([...expenses, newExpense]);
-      setNewExpense({ amount: 0, category: "", note: "" });
-    };
+
+  const handleDeleteExpense = (categoryIndex, expenseIndex) => {
+    const updatedCategories = [...categories];
+    updatedCategories[categoryIndex].expenses.splice(expenseIndex, 1);
+    setCategories(updatedCategories);
+  };
   
-    const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
-    const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-  
-    const handleAddIncome = () => {
-      setIncome(income + newIncome);
-      setNewIncome(0);
-    };
-  
-    const handleAddExpense = () => {
-      const updatedCategories = categories.map((category) => {
-        if (category.name === newExpense.category) {
-          return {
-            ...category,
-            budget: category.budget + newExpense.amount,
-          };
-        }
-        return category;
-      });
-      setCategories(updatedCategories);
-      setExpenses([...expenses, newExpense]);
-      setNewExpense({ amount: 0, category: "", note: "" });
-    };
-  
-    const handleAddCategory = () => {
-      setCategories([...categories, newCategory]);
-      setNewCategory({ name: "", budget: 0, color: "#ffffff" });
-    };
+
+  const getRandomColor = () => {
+    return "#" + Math.floor(Math.random() * 16777215).toString(16);
+  };
 
   return (
-    <div className="background container mt-5"> 
+    <div className="background container mt-5">
       <div className="row">
+        {/* Income section */}
         <div className="col-md-6 d-flex">
           <div className="card flex-grow-1" style={{ backgroundColor: "#280000", color: "#dbe8f8" }}>
             <div className="card-body d-flex flex-column justify-content-between">
@@ -79,6 +84,8 @@ function MainPage() {
             </div>
           </div>
         </div>
+        
+        {/* Expenses section */}
         <div className="col-md-6 d-flex">
           <div className="card flex-grow-1" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
             <div className="card-body d-flex flex-column justify-content-between">
@@ -118,6 +125,8 @@ function MainPage() {
           </div>
         </div>
       </div>
+      
+      {/* Budget Categories */}
       <div className="row mt-5">
         <div className="col-md-12">
           <h2>Budget Categories</h2>
@@ -135,13 +144,24 @@ function MainPage() {
                   value={category.budget}
                   onChange={(e) => handleChange(index, parseFloat(e.target.value))}
                 />
-                <span className="input-group-text">{((category.budget / income) * 100).toFixed(2)}%</span>
+                <span className="input-group-text">{((category.budget / totalBudget) * 100).toFixed(2)}%</span>
+              </div>
+              <div>
+                <h5>Expenses</h5>
+                {category.expenses.map((expense, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <p style={{ marginRight: "auto" }}>{expense.amount} - {expense.note}</p>
+                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteExpense(index, i)}>Delete</button>
+                </div>
+                ))}
               </div>
             </div>
           ))}
           <h4>Total Budget: {totalBudget}</h4>
         </div>
       </div>
+      
+      {/* Add New Category */}
       <div className="row mt-5">
         <div className="col-md-6">
           <div className="card" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
@@ -161,12 +181,6 @@ function MainPage() {
                   placeholder="Budget"
                   value={newCategory.budget}
                   onChange={(e) => setNewCategory({ ...newCategory, budget: parseFloat(e.target.value) })}
-                />
-                <input
-                  type="color"
-                  className="form-control mt-2"
-                  value={newCategory.color}
-                  onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
                 />
                 <button className="btn btn-primary mt-2" onClick={handleAddCategory}>Add Category</button>
               </div>
