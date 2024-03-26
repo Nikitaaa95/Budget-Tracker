@@ -53,9 +53,11 @@ function MainPage() {
 
   const handleDeleteExpense = (categoryIndex, expenseIndex) => {
     const updatedCategories = [...categories];
-    updatedCategories[categoryIndex].expenses.splice(expenseIndex, 1);
+    const deletedExpense = updatedCategories[categoryIndex].expenses.splice(expenseIndex, 1)[0];
     setCategories(updatedCategories);
+    setExpenses(expenses.filter(expense => expense !== deletedExpense));
   };
+  
   
 
   const getRandomColor = () => {
