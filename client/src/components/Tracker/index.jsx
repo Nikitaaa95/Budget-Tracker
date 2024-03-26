@@ -4,6 +4,8 @@ import { QUERY_ME } from "../../utils/queries";
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import { ADD_INCOME } from "../../utils/mutations";
+import { ADD_EXPENSE } from "../../utils/mutations";
+
 
 function MainPage() {
   
@@ -31,6 +33,8 @@ function MainPage() {
   const userData = data?.me || {};
 
   const [addIncome] = useMutation(ADD_INCOME);
+  const [addExpense] = useMutation(ADD_EXPENSE);
+
 
   const handleChange = (index, value) => {
     const newCategories = [...categories];
@@ -60,7 +64,14 @@ function MainPage() {
 
   };
 
-  const handleAddExpense = () => {
+  const handleAddExpense = async () => {
+    const {data} = await addExpense({
+      variables: {
+        amount: parseFloat(newIncome), 
+        label: newExpense.category
+      },  
+    });
+
       const updatedCategories = categories.map((category) => {
         if (category.name === newExpense.category) {
           return {
