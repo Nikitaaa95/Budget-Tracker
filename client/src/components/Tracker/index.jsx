@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import '../../App.css';
+import React, { useEffect, useState, useRef } from "react";
+import "../../App.css";
+import { QUERY_ME } from "../../utils/queries";
+import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { ADD_INCOME } from "../../utils/mutations";
 
 function MainPage() {
   const [income, setIncome] = useState(0);
