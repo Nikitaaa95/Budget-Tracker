@@ -118,6 +118,7 @@ function MainPage() {
                 <button className="btn btn-primary" onClick={handleAddIncome}>
                   Add
                 </button>
+
               </div>
             </div>
           </div>
