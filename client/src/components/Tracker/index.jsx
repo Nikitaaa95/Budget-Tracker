@@ -14,10 +14,20 @@ function MainPage() {
     const [newExpense, setNewExpense] = useState({ amount: 0, category: "", note: "" });
     const [newCategory, setNewCategory] = useState({ name: "", budget: 0, color: "#ffffff" });
   
-    const handleChange = (index, value) => {
-      const newCategories = [...categories];
-      newCategories[index].budget = value;
-      setCategories(newCategories);
+    const handleAddExpense = () => {
+      const updatedCategories = categories.map((category) => {
+        if (category.name === newExpense.category) {
+          return {
+            ...category,
+            budget: category.budget + newExpense.amount,
+            expenses: [...category.expenses, newExpense],
+          };
+        }
+        return category;
+      });
+      setCategories(updatedCategories);
+      setExpenses([...expenses, newExpense]);
+      setNewExpense({ amount: 0, category: "", note: "" });
     };
   
     const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
