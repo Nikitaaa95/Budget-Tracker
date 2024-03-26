@@ -13,6 +13,11 @@ Link to deployed webpage on Heroku: https://peaceful-reef-29338-3af1271d806b.her
 ![SignUpPage](client/images/SignUpPage.png)
 ![ProfilePage](client/images/ProfilePage.png)
 
+Instructions for ![Homepage]: When you click on sign up or sign in, you will be prompted to either sign up or sign in 
+Instructions for ![SignUpPage]: When you type in a email, username and password, you are signed up and brought to the budget tracker
+Instructions for ![LoginPage]: When you type in your log in info, you are able to log in to see the budget tracker 
+Instructions for ![ProfilePage]: When you click the add button on income, you can add your income. When you select a value and category for expenses and click add expense, you will see a new value as well as the categories change corresponding to that. You can also add a new category at the bottom
+
 ## Credits 
 Nikita Thomas: https://github.com/Nikitaaa95
 
@@ -20,7 +25,7 @@ Yuval Nahmias: https://github.com/YuvNah
 
 Rong Si Deng: https://github.com/rosiedeng1
 
-Kateryna Redkina: 
+Kateryna Redkina: https://github.com/KateRedkina
 
 ## License 
 Please refer to the LICENSE in the repo
