@@ -12,9 +12,9 @@ function MainPage() {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([
-    { name: "Housing", budget: 0, color: "#b27a03" },
-    { name: "Transportation", budget: 0, color: "#689fbd" },
-    { name: "Food", budget: 0, color: "#b27a03" },
+    // { name: "Housing", budget: 0, color: "#b27a03" },
+    // { name: "Transportation", budget: 0, color: "#689fbd" },
+    // { name: "Food", budget: 0, color: "#b27a03" },
     // Add more categories as needed
   ]);
   const [newIncome, setNewIncome] = useState(0);
@@ -42,14 +42,36 @@ function MainPage() {
     setCategories(newCategories);
   };
 
+  // useEffect(() => {
+  //   console.log("use effect");
+  //   setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
+  //   setCategories(userData.expense.map((curr) =>{
+  //    return  { name: curr.label, budget: curr.amount, color: "#b27a03" }}
+  //     ));
+  //   console.log(income);
+  // }, []);
+
   useEffect(() => {
     console.log("use effect");
     setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
-    setCategories(userData.expense.map((curr) =>{
-     return  { name: curr.label, budget: curr.amount, color: "#b27a03" }}
-      ));
-    console.log(income);
+    const totalExpenseAmount = userData.expense.reduce(
+      (acc, curr) => acc + curr.amount,
+      0
+    );
+    const uniqueLabels = [...new Set(userData.expense.map((curr) => curr.label))];
+    setCategories(
+      uniqueLabels.map((label) => ({
+        name: label,
+        budget: userData.expense.filter((expense) => expense.label === label)
+                                  .reduce((acc, curr) => acc + curr.amount, 0),
+        color: "#B27A03",
+      }))
+    );
+    setExpenses(userData.expense); // Update expenses state
+    // setTotalExpense(totalExpenseAmount); // Set the total expense amount
   }, []);
+
+  // For each loop that we keep appending to array if it doesnt exist 
 
   const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
   const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
