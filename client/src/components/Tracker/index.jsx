@@ -30,7 +30,6 @@ function MainPage() {
   const { data, loading } = useQuery(QUERY_ME);
   const userData = data?.me || {};
 
-
   const [addIncome] = useMutation(ADD_INCOME);
 
   const handleChange = (index, value) => {
@@ -62,19 +61,33 @@ function MainPage() {
   };
 
   const handleAddExpense = () => {
-    const updatedCategories = categories.map((category) => {
-      if (category.name === newExpense.category) {
-        return {
-          ...category,
-          budget: category.budget + newExpense.amount,
-        };
-      }
-      return category;
-    });
-    setCategories(updatedCategories);
-    setExpenses([...expenses, newExpense]);
-    setNewExpense({ amount: 0, category: "", note: "" });
-  };
+      const updatedCategories = categories.map((category) => {
+        if (category.name === newExpense.category) {
+          return {
+            ...category,
+            budget: category.budget + newExpense.amount,
+          };
+        }
+        return category;
+      });
+      setCategories(updatedCategories);
+      setExpenses([...expenses, newExpense]);
+      setNewExpense({ amount: 0, category: "", note: "" });
+    };
+    //   const updatedCategories = categories.map((category) => {
+    //     if (category.name === newExpense.category) {
+    //       return {
+    //         ...category,
+    //         budget: category.budget + newExpense.amount,
+    //         expenses: [...category.expenses, newExpense], // Add expense to category
+    //       };
+    //     }
+    //     return category;
+    //   });
+    //   setCategories(updatedCategories);
+    //   setExpenses([...expenses, newExpense]);
+    //   setNewExpense({ amount: 0, category: "", note: "" });
+    // };
 
   const handleAddCategory = () => {
     setCategories([...categories, newCategory]);
