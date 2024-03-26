@@ -28,6 +28,12 @@ query Profile($profileId: ID!) {
       label
       amount
     }
+
+    expense {
+      _id
+      label
+      amount
+    }
   }
 }
 `;

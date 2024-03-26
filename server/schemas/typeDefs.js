@@ -5,6 +5,7 @@ const typeDefs = `
     email: String
     password: String
     income: [Income]
+    expense: [Expense]
   }
 
   type Auth {
