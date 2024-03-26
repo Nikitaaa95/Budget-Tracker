@@ -45,6 +45,9 @@ function MainPage() {
   useEffect(() => {
     console.log("use effect");
     setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
+    setCategories(userData.expense.map((curr) =>{
+     return  { name: curr.label, budget: curr.amount, color: "#b27a03" }}
+      ));
     console.log(income);
   }, []);
 
@@ -67,7 +70,7 @@ function MainPage() {
   const handleAddExpense = async () => {
     const {data} = await addExpense({
       variables: {
-        amount: parseFloat(newIncome), 
+        amount: newExpense.amount, 
         label: newExpense.category
       },  
     });

@@ -28,7 +28,6 @@ query Profile($profileId: ID!) {
       label
       amount
     }
-
     expense {
       _id
       label
@@ -45,6 +44,11 @@ query Me {
     name
     email
     income {
+      _id
+      label
+      amount
+    }
+    expense {
       _id
       label
       amount
