@@ -27,6 +27,7 @@ type Income {
   _id: ID
   label: String!
   amount: Int!
+  note: String
 }
 
   type Mutation {
