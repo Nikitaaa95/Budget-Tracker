@@ -54,10 +54,6 @@ function MainPage() {
   useEffect(() => {
     console.log("use effect");
     setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
-    const totalExpenseAmount = userData.expense.reduce(
-      (acc, curr) => acc + curr.amount,
-      0
-    );
     const uniqueLabels = [...new Set(userData.expense.map((curr) => curr.label))];
     setCategories(
       uniqueLabels.map((label) => ({
@@ -67,9 +63,10 @@ function MainPage() {
         color: "#B27A03",
       }))
     );
+    const totalExpenseAmount = categories.reduce((acc, curr) => acc + curr.budget, 0);
     setExpenses(userData.expense); // Update expenses state
     // setTotalExpense(totalExpenseAmount); // Set the total expense amount
-  }, []);
+  }, [userData]); // Add userData as a dependency
 
   // For each loop that we keep appending to array if it doesnt exist 
 
