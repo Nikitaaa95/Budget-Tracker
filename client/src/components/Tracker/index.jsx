@@ -128,22 +128,7 @@ function MainPage() {
     setExpenses([...expenses, newExpense]);
     setNewExpense({ amount: 0, category: "", note: "" });
   };
-
-    
-
-      const updatedCategories = categories.map((category) => {
-        if (category.name === newExpense.category) {
-          return {
-            ...category,
-            budget: category.budget + newExpense.amount,
-          };
-        }
-        return category;
-      });
-      setCategories(updatedCategories);
-      setExpenses([...expenses, newExpense]);
-      setNewExpense({ amount: 0, category: "", note: "" });
-    };
+  
     //   const updatedCategories = categories.map((category) => {
     //     if (category.name === newExpense.category) {
     //       return {
