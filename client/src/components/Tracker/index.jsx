@@ -1,22 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "../../App.css";
 import { QUERY_ME } from "../../utils/queries";
-import { useQuery } from "@apollo/client";
-import { useMutation } from "@apollo/client";
-import { ADD_INCOME, REMOVE_EXPENSE } from "../../utils/mutations";
-import { ADD_EXPENSE } from "../../utils/mutations";
+import { useQuery, useMutation } from "@apollo/client";
+import { ADD_INCOME, REMOVE_EXPENSE, ADD_EXPENSE } from "../../utils/mutations";
 
 
 function MainPage() {
-  
   const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState([]);
-  const [categories, setCategories] = useState([
-    // { name: "Housing", budget: 0, color: "#b27a03" },
-    // { name: "Transportation", budget: 0, color: "#689fbd" },
-    // { name: "Food", budget: 0, color: "#b27a03" },
-    // Add more categories as needed
-  ]);
+  const [categories, setCategories] = useState([]);
   const [newIncome, setNewIncome] = useState(0);
   const [newExpense, setNewExpense] = useState({
     amount: 0,
@@ -34,103 +25,53 @@ function MainPage() {
 
   const [addIncome] = useMutation(ADD_INCOME);
   const [addExpense] = useMutation(ADD_EXPENSE);
-  const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
-
-
-  const handleChange = (index, value) => {
-    const newCategories = [...categories];
-    newCategories[index].budget = value;
-    setCategories(newCategories);
-  };
-
-
-  useEffect(() => {
-    console.log("use effect");
-    setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
-    const uniqueLabels = [...new Set(userData.expense.map((curr) => curr.label))];
-    const updatedCategories = uniqueLabels.map((label) => {
-      const expensesForCategory = userData.expense.filter((expense) => expense.label === label);
-      return {
-        name: label,
-        budget: expensesForCategory.reduce((acc, curr) => acc + curr.amount, 0),
-        color: "#B27A03",
-        expenses: expensesForCategory,
-      };
-    });
-    setCategories(updatedCategories);
-  }, [userData]); // Add userData as a dependency
-  // Add userData as a dependency
-
-  useEffect(() => {
-    categories.forEach((category, index) => {
-      const newCategories = [...categories];
-      newCategories[index].budgetPercentage = ((category.budget / income) * 100).toFixed(2);
-      setCategories(newCategories);
-    });
-  }, [income]);
-  // For each loop that we keep appending to array if it doesnt exist 
-
-  const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
-  const expenseTotal = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+  const [deleteExpense] = useMutation(REMOVE_EXPENSE);
 
   const handleAddIncome = async () => {
-    const {data} = await addIncome({
-      variables: {
-        amount: parseFloat(newIncome),
-      },  
-    });
-
-    console.log(data)
-    setIncome(prev => prev + data.addIncome.amount)
-    setNewIncome(0)
-
+    try {
+      const { data } = await addIncome({
+        variables: {
+          amount: parseFloat(newIncome),
+        },
+      });
+      setIncome(prev => prev + data.addIncome.amount);
+      setNewIncome(0);
+    } catch (error) {
+      console.error("Failed to add income:", error);
+    }
   };
 
   const handleDeleteExpense = async (categoryName, expenseId) => {
-    // Delete the expense from the backend
-    await deleteExpense({
-      variables: {
-        id: expenseId,
-      },
-    });
-    const updatedCategories = categories.map((category) => {
-      if (category.name === categoryName) {
-        return {
-          ...category,
-          expenses: category.expenses.filter((expense) => expense.id !== expenseId),
-          budget: category.budget - category.expenses.find((expense) => expense.id === expenseId).amount,
-        };
-      }
-      return category;
-    });
-    setCategories(updatedCategories);
+    try {
+      await deleteExpense({
+        variables: {
+          id: expenseId,
+        },
+      });
+      const updatedCategories = categories.map((category) => {
+        if (category.name === categoryName) {
+          return {
+            ...category,
+            expenses: category.expenses.filter((expense) => expense.id !== expenseId),
+            budget: category.budget - category.expenses.find((expense) => expense.id === expenseId).amount,
+          };
+        }
+        return category;
+      });
+      setCategories(updatedCategories);
+    } catch (error) {
+      console.error("Failed to delete expense:", error);
+    }
   };
-  
-  
+
   const handleAddExpense = async () => {
-    const { data } = await addExpense({
-      variables: {
-        amount: newExpense.amount,
-        label: newExpense.category
-      },
-    });
-  
-    const updatedCategories = categories.map((category) => {
-      if (category.name === newExpense.category) {
-        return {
-          ...category,
-          budget: category.budget + newExpense.amount,
-        };
-      }
-      return category;
-    });
-    setCategories(updatedCategories);
-    setExpenses([...expenses, newExpense]);
-    setNewExpense({ amount: 0, category: "", note: "" });
-  };
-
-    
-
+    try {
+      const { data } = await addExpense({
+        variables: {
+          amount: newExpense.amount,
+          label: newExpense.category,
+        },
+      });
       const updatedCategories = categories.map((category) => {
         if (category.name === newExpense.category) {
           return {
@@ -141,30 +82,17 @@ function MainPage() {
         return category;
       });
       setCategories(updatedCategories);
-      setExpenses([...expenses, newExpense]);
       setNewExpense({ amount: 0, category: "", note: "" });
-    };
-    //   const updatedCategories = categories.map((category) => {
-    //     if (category.name === newExpense.category) {
-    //       return {
-    //         ...category,
-    //         budget: category.budget + newExpense.amount,
-    //         expenses: [...category.expenses, newExpense], // Add expense to category
-    //       };
-    //     }
-    //     return category;
-    //   });
-    //   setCategories(updatedCategories);
-    //   setExpenses([...expenses, newExpense]);
-    //   setNewExpense({ amount: 0, category: "", note: "" });
-    // };
+    } catch (error) {
+      console.error("Failed to add expense:", error);
+    }
+  };
 
-    const handleAddCategory = () => {
-      const color = "#B27A03"; // Set the color to #B27A03
-      setCategories([...categories, { ...newCategory, color, budget: 0, expenses: [] }]);
-      setNewCategory({ name: "", budget: 0 });
-    };
-    
+  const handleAddCategory = () => {
+    const color = "#B27A03";
+    setCategories([...categories, { ...newCategory, color, budget: 0, expenses: [] }]);
+    setNewCategory({ name: "", budget: 0, color: "#ffffff" });
+  };
 
   if (loading) return <p>LOADING...</p>;
   
@@ -330,6 +258,6 @@ function MainPage() {
 </div>
 </div>
   );
+}
 
 export default MainPage;
-
