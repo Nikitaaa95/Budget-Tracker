@@ -43,14 +43,6 @@ function MainPage() {
     setCategories(newCategories);
   };
 
-  // useEffect(() => {
-  //   console.log("use effect");
-  //   setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
-  //   setCategories(userData.expense.map((curr) =>{
-  //    return  { name: curr.label, budget: curr.amount, color: "#b27a03" }}
-  //     ));
-  //   console.log(income);
-  // }, []);
 
   useEffect(() => {
     console.log("use effect");
@@ -69,6 +61,13 @@ function MainPage() {
     // setTotalExpense(totalExpenseAmount); // Set the total expense amount
   }, [userData]); // Add userData as a dependency
 
+  useEffect(() => {
+    categories.forEach((category, index) => {
+      const newCategories = [...categories];
+      newCategories[index].budgetPercentage = ((category.budget / income) * 100).toFixed(2);
+      setCategories(newCategories);
+    });
+  }, [income]);
   // For each loop that we keep appending to array if it doesnt exist 
 
   const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
@@ -249,8 +248,9 @@ function MainPage() {
                 />
 
                 <span className="input-group-text">
-                  {((category.budget / {income}) * 100).toFixed(2)}%
+                  {category.budgetPercentage}% 
                 </span>
+
 
               </div>
             </div>
