@@ -91,7 +91,7 @@ function MainPage() {
     console.log("Expense ID to delete:", expenseId)
     await deleteExpense({
       variables: {
-        expenseid: expenseId,
+        expenseId: expenseId,
       },
     });
     const updatedCategories = categories.map((category) => {
