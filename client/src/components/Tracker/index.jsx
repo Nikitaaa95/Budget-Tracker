@@ -106,6 +106,7 @@ function MainPage() {
     setCategories(updatedCategories);
   };
   
+  
   const handleAddExpense = async () => {
     const { data } = await addExpense({
       variables: {
@@ -127,7 +128,7 @@ function MainPage() {
     setExpenses([...expenses, newExpense]);
     setNewExpense({ amount: 0, category: "", note: "" });
   };
-  
+
     
 
       const updatedCategories = categories.map((category) => {
@@ -329,7 +330,6 @@ function MainPage() {
 </div>
 </div>
   );
-}
 
 export default MainPage;
 
