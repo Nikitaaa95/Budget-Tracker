@@ -92,6 +92,7 @@ function MainPage() {
   const handleDeleteExpense = async (categoryName, expenseId) => {
     // Delete the expense from the backend
     console.log("Expense ID to delete:", expenseId);
+    
     await deleteExpense({
       variables: {
         expenseId: expenseId, // Correct variable name
@@ -107,6 +108,7 @@ function MainPage() {
           budget: updatedBudget,
         };
       }
+      console.log(updatedExpenses)  
       return category;
     });
     setCategories(updatedCategories);
@@ -272,11 +274,13 @@ function MainPage() {
           <li key={expenseIndex} className="list-group-item d-flex justify-content-between align-items-center">
           <div>
             ${expense.amount}
+    
           </div>
           <button
             className="btn btn-danger btn-sm"
             onClick={() => {
             console.log("Deleting expense with ID:", expense._id);
+            console.log(expense)
             handleDeleteExpense(category.name, expense._id);
             }}
 >
