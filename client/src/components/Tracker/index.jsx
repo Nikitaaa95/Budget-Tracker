@@ -272,8 +272,14 @@ function MainPage() {
           </div>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => handleDeleteExpense(category.name, expense.id)}
-        >Delete</button>
+            onClick={() => {
+            console.log("Deleting expense with ID:", expense.id);
+            handleDeleteExpense(category.name, expense.id);
+            }}
+>
+  Delete
+</button>
+
     </li>
   ))}
 </ul>
