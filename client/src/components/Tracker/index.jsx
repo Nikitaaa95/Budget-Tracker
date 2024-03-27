@@ -3,8 +3,7 @@ import "../../App.css";
 import { QUERY_ME } from "../../utils/queries";
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
-import { ADD_INCOME } from "../../utils/mutations";
-
+import { ADD_INCOME, REMOVE_EXPENSE } from "../../utils/mutations";
 import { ADD_EXPENSE } from "../../utils/mutations";
 
 
@@ -35,6 +34,7 @@ function MainPage() {
 
   const [addIncome] = useMutation(ADD_INCOME);
   const [addExpense] = useMutation(ADD_EXPENSE);
+  const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
 
 
   const handleChange = (index, value) => {
@@ -48,18 +48,18 @@ function MainPage() {
     console.log("use effect");
     setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
     const uniqueLabels = [...new Set(userData.expense.map((curr) => curr.label))];
-    setCategories(
-      uniqueLabels.map((label) => ({
+    const updatedCategories = uniqueLabels.map((label) => {
+      const expensesForCategory = userData.expense.filter((expense) => expense.label === label);
+      return {
         name: label,
-        budget: userData.expense.filter((expense) => expense.label === label)
-                                  .reduce((acc, curr) => acc + curr.amount, 0),
+        budget: expensesForCategory.reduce((acc, curr) => acc + curr.amount, 0),
         color: "#B27A03",
-      }))
-    );
-    const totalExpenseAmount = categories.reduce((acc, curr) => acc + curr.budget, 0);
-    setExpenses(userData.expense); // Update expenses state
-    // setTotalExpense(totalExpenseAmount); // Set the total expense amount
+        expenses: expensesForCategory,
+      };
+    });
+    setCategories(updatedCategories);
   }, [userData]); // Add userData as a dependency
+  // Add userData as a dependency
 
   useEffect(() => {
     categories.forEach((category, index) => {
@@ -86,41 +86,53 @@ function MainPage() {
 
   };
 
-  const handleAddExpense = async () => {
-    const {data} = await addExpense({
+  const handleDeleteExpense = async (categoryName, expenseId) => {
+    // Delete the expense from the backend
+    await deleteExpense({
       variables: {
-        amount: newExpense.amount, 
-        label: newExpense.category
-      },  
+        id: expenseId,
+      },
     });
+    const updatedCategories = categories.map((category) => {
+      if (category.name === categoryName) {
+        const updatedExpenses = category.expenses.filter((expense) => expense.id !== expenseId);
+        const updatedBudget = updatedExpenses.reduce((acc, curr) => acc + curr.amount, 0);
+        return {
+          ...category,
+          expenses: updatedExpenses,
+          budget: updatedBudget,
+        };
+      }
+      return category;
+    });
+    setCategories(updatedCategories);
+  };
+  
+  
+  const handleAddExpense = async () => {
+    const { data } = await addExpense({
+      variables: {
+        amount: newExpense.amount,
+        label: newExpense.category,
+      },
+    });
+  
+    const updatedCategories = categories.map((category) => {
+      if (category.name === newExpense.category) {
+        return {
+          ...category,
+          budget: category.budget + newExpense.amount,
+          expenses: [...category.expenses, { id: data.addExpense.id, amount: newExpense.amount, note: newExpense.note }],
+        };
+      }
+      return category;
+    });
+  
+    setCategories(updatedCategories);
+    setExpenses([...expenses, { id: data.addExpense.id, amount: newExpense.amount, label: newExpense.category, note: newExpense.note }]);
+    setNewExpense({ amount: 0, category: "", note: "" });
+  };
 
-      const updatedCategories = categories.map((category) => {
-        if (category.name === newExpense.category) {
-          return {
-            ...category,
-            budget: category.budget + newExpense.amount,
-          };
-        }
-        return category;
-      });
-      setCategories(updatedCategories);
-      setExpenses([...expenses, newExpense]);
-      setNewExpense({ amount: 0, category: "", note: "" });
-    };
-    //   const updatedCategories = categories.map((category) => {
-    //     if (category.name === newExpense.category) {
-    //       return {
-    //         ...category,
-    //         budget: category.budget + newExpense.amount,
-    //         expenses: [...category.expenses, newExpense], // Add expense to category
-    //       };
-    //     }
-    //     return category;
-    //   });
-    //   setCategories(updatedCategories);
-    //   setExpenses([...expenses, newExpense]);
-    //   setNewExpense({ amount: 0, category: "", note: "" });
-    // };
 
     const handleAddCategory = () => {
       const color = "#B27A03"; // Set the color to #B27A03
@@ -218,46 +230,58 @@ function MainPage() {
         </div>
       </div>
       
-      {/* Budget Categories */}
-      <div className="row mt-5">
-        <div className="col-md-12">
-          <h2>Budget Categories</h2>
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="mb-3"
-              style={{
-                backgroundColor: category.color,
-                padding: "10px",
-                color: "#fff",
-              }}
-            >
-              <label htmlFor={`category-${index}`} className="form-label">
-                {category.name}
-              </label>
-              <div className="input-group">
-                <input
-                  id={`category-${index}`}
-                  type="number"
-                  className="form-control"
-                  placeholder={`Enter budget for ${category.name}`}
-                  value={category.budget}
-                  onChange={(e) =>
-                    handleChange(index, parseFloat(e.target.value))
-                  }
-                />
-
-                <span className="input-group-text">
-                  {category.budgetPercentage}% 
-                </span>
-
-
-              </div>
-            </div>
-          ))}
-          <h4>Total Budget: {totalBudget}</h4>
+{/* Budget Categories */}
+<div className="row mt-5">
+  <div className="col-md-12">
+    <h2>Budget Categories</h2>
+    {categories.map((category, index) => (
+      <div
+        key={index}
+        className="mb-3"
+        style={{
+          backgroundColor: category.color,
+          padding: "10px",
+          color: "#fff",
+        }}
+      >
+        <label htmlFor={`category-${index}`} className="form-label">
+          {category.name}
+        </label>
+        <div className="input-group">
+          <input
+            id={`category-${index}`}
+            type="number"
+            className="form-control"
+            placeholder={`Enter budget for ${category.name}`}
+            value={category.budget}
+            onChange={(e) =>
+              handleChange(index, parseFloat(e.target.value))
+            }
+          />
+          <span className="input-group-text">
+            {category.budgetPercentage}% 
+          </span>
         </div>
+        {/* Render expenses for this category */}
+        <ul className="list-group">
+          {category.expenses.map((expense, expenseIndex) => (
+          <li key={expenseIndex} className="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            ${expense.amount}
+          </div>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={() => handleDeleteExpense(category.name, expense.id)}
+        >Delete</button>
+    </li>
+  ))}
+</ul>
+
       </div>
+    ))}
+    <h4>Total Budget: {totalBudget}</h4>
+  </div>
+</div>
       
       {/* Add New Category */}
 <div className="row mt-5">
@@ -281,7 +305,6 @@ function MainPage() {
 </div>
 </div>
   );
-}
-
+          }
 export default MainPage;
 
