@@ -28,6 +28,11 @@ query Profile($profileId: ID!) {
       label
       amount
     }
+    expense {
+      _id
+      label
+      amount
+    }
   }
 }
 `;
@@ -43,5 +48,21 @@ query Me {
       label
       amount
     }
+    expense {
+      _id
+      label
+      amount
+    }
   }
 }`;
+
+export const QUERY_INCOME = gql`
+query QueryIncome($incomeId: ID!) {
+  income(incomeId: $incomeId) {
+    _id
+    amount
+    label
+  }
+}`;
+
+

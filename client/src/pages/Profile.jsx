@@ -11,6 +11,7 @@ const Profile = () => {
   const { profileId } = useParams();
 
   // If there is no `profileId` in the URL as a parameter, execute the `QUERY_ME` query instead for the logged in user's information
+  console.log(profileId)
   const { loading, data } = useQuery(
     profileId ? QUERY_SINGLE_PROFILE : QUERY_ME,
     {
@@ -20,7 +21,7 @@ const Profile = () => {
 
   // Check if data is returning from the `QUERY_ME` query, then the `QUERY_SINGLE_PROFILE` query
   const profile = data?.me || data?.profile || {};
-
+  console.log(profile)
   if (Auth.loggedIn() && Auth.getProfile().data._id === profileId) {
     return <Navigate to="/me" />;
   }

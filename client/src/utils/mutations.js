@@ -13,11 +13,10 @@ export const ADD_PROFILE = gql`
 `;
 
 export const ADD_INCOME = gql`
-mutation AddIncome($label: String!, $amount: Int!) {
-  addIncome(label: $label, amount: $amount) {
+mutation AddIncome($amount: Int!) {
+  addIncome(amount: $amount) {
     _id
     amount
-    label
   }
 }
 `;
