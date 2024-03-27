@@ -5,7 +5,6 @@ import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import { ADD_INCOME, REMOVE_EXPENSE } from "../../utils/mutations";
 import { ADD_EXPENSE } from "../../utils/mutations";
-const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
 
 
 function MainPage() {
@@ -35,6 +34,7 @@ function MainPage() {
 
   const [addIncome] = useMutation(ADD_INCOME);
   const [addExpense] = useMutation(ADD_EXPENSE);
+  const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
 
 
   const handleChange = (index, value) => {
