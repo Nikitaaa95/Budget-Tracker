@@ -3,9 +3,9 @@ import "../../App.css";
 import { QUERY_ME } from "../../utils/queries";
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
-import { ADD_INCOME } from "../../utils/mutations";
-
+import { ADD_INCOME, REMOVE_EXPENSE } from "../../utils/mutations";
 import { ADD_EXPENSE } from "../../utils/mutations";
+const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
 
 
 function MainPage() {
@@ -86,33 +86,48 @@ function MainPage() {
 
   };
 
-  const handleAddExpense = async () => {
-    const {data} = await addExpense({
+  const handleDeleteExpense = async (categoryName, expenseId) => {
+    // Delete the expense from the backend
+    await deleteExpense({
       variables: {
-        amount: newExpense.amount, 
-        label: newExpense.category
-      },  
+        id: expenseId,
+      },
     });
-
-    const handleDeleteExpense = async (categoryName, expenseId) => {
-      // Delete the expense from the backend
-      await deleteExpense({
-        variables: {
-          id: expenseId,
-        },
-      });
-      const updatedCategories = categories.map((category) => {
-        if (category.name === categoryName) {
-          return {
-            ...category,
-            expenses: category.expenses.filter((expense) => expense.id !== expenseId),
-            budget: category.budget - category.expenses.find((expense) => expense.id === expenseId).amount,
-          };
-        }
-        return category;
-      });
-      setCategories(updatedCategories);
-    };
+    const updatedCategories = categories.map((category) => {
+      if (category.name === categoryName) {
+        return {
+          ...category,
+          expenses: category.expenses.filter((expense) => expense.id !== expenseId),
+          budget: category.budget - category.expenses.find((expense) => expense.id === expenseId).amount,
+        };
+      }
+      return category;
+    });
+    setCategories(updatedCategories);
+  };
+  
+  const handleAddExpense = async () => {
+    const { data } = await addExpense({
+      variables: {
+        amount: newExpense.amount,
+        label: newExpense.category
+      },
+    });
+  
+    const updatedCategories = categories.map((category) => {
+      if (category.name === newExpense.category) {
+        return {
+          ...category,
+          budget: category.budget + newExpense.amount,
+        };
+      }
+      return category;
+    });
+    setCategories(updatedCategories);
+    setExpenses([...expenses, newExpense]);
+    setNewExpense({ amount: 0, category: "", note: "" });
+  };
+  
     
 
       const updatedCategories = categories.map((category) => {
