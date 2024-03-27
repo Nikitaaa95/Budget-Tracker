@@ -34,7 +34,7 @@ function MainPage() {
 
   const [addIncome] = useMutation(ADD_INCOME);
   const [addExpense] = useMutation(ADD_EXPENSE);
-  const [deleteExpense] = useMutation(REMOVE_EXPENSE); 
+  const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
 
 
   const handleChange = (index, value) => {
@@ -93,12 +93,6 @@ function MainPage() {
         id: expenseId,
       },
     });
-  
-    // Remove the expense from the expenses state
-    const updatedExpenses = expenses.filter((expense) => expense.id !== expenseId);
-    setExpenses(updatedExpenses);
-  
-    // Update the categories state to reflect the deleted expense
     const updatedCategories = categories.map((category) => {
       if (category.name === categoryName) {
         return {
@@ -110,8 +104,6 @@ function MainPage() {
       return category;
     });
     setCategories(updatedCategories);
-  };
-  egories(updatedCategories);
   };
   
   
@@ -138,22 +130,7 @@ function MainPage() {
     setExpenses([...expenses, { id: data.addExpense.id, amount: newExpense.amount, label: newExpense.category, note: newExpense.note }]);
     setNewExpense({ amount: 0, category: "", note: "" });
   };
-  
-  
-    //   const updatedCategories = categories.map((category) => {
-    //     if (category.name === newExpense.category) {
-    //       return {
-    //         ...category,
-    //         budget: category.budget + newExpense.amount,
-    //         expenses: [...category.expenses, newExpense], // Add expense to category
-    //       };
-    //     }
-    //     return category;
-    //   });
-    //   setCategories(updatedCategories);
-    //   setExpenses([...expenses, newExpense]);
-    //   setNewExpense({ amount: 0, category: "", note: "" });
-    // };
+
 
     const handleAddCategory = () => {
       const color = "#B27A03"; // Set the color to #B27A03
