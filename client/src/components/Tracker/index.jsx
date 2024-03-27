@@ -59,7 +59,9 @@ function MainPage() {
       };
     });
     setCategories(updatedCategories);
-  }, [userData]); // Add userData as a dependency
+    setExpenses(userData.expense);
+  }, [userData]);
+  
   // Add userData as a dependency
 
   useEffect(() => {
