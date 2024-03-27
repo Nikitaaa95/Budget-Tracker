@@ -276,7 +276,7 @@ function MainPage() {
           {category.expenses.map((expense, expenseIndex) => (
           <li key={expenseIndex} className="list-group-item d-flex justify-content-between align-items-center">
           <div>
-            {expense.label} - ${expense.amount}
+            ${expense.amount}
           </div>
           <button
             className="btn btn-danger btn-sm"
