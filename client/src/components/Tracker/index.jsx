@@ -94,6 +94,27 @@ function MainPage() {
       },  
     });
 
+    const handleDeleteExpense = async (categoryName, expenseId) => {
+      // Delete the expense from the backend
+      await deleteExpense({
+        variables: {
+          id: expenseId,
+        },
+      });
+      const updatedCategories = categories.map((category) => {
+        if (category.name === categoryName) {
+          return {
+            ...category,
+            expenses: category.expenses.filter((expense) => expense.id !== expenseId),
+            budget: category.budget - category.expenses.find((expense) => expense.id === expenseId).amount,
+          };
+        }
+        return category;
+      });
+      setCategories(updatedCategories);
+    };
+    
+
       const updatedCategories = categories.map((category) => {
         if (category.name === newExpense.category) {
           return {
