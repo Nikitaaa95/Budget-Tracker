@@ -95,10 +95,12 @@ function MainPage() {
     });
     const updatedCategories = categories.map((category) => {
       if (category.name === categoryName) {
+        const updatedExpenses = category.expenses.filter((expense) => expense.id !== expenseId);
+        const updatedBudget = updatedExpenses.reduce((acc, curr) => acc + curr.amount, 0);
         return {
           ...category,
-          expenses: category.expenses.filter((expense) => expense.id !== expenseId),
-          budget: category.budget - category.expenses.find((expense) => expense.id === expenseId).amount,
+          expenses: updatedExpenses,
+          budget: updatedBudget,
         };
       }
       return category;
