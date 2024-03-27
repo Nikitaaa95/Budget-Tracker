@@ -97,7 +97,7 @@ function MainPage() {
     });
     const updatedCategories = categories.map((category) => {
       if (category.name === categoryName) {
-        const updatedExpenses = category.expenses.filter((expense) => expense.id !== expenseId);
+        const updatedExpenses = category.expenses.filter((expense) => expense._id !== expenseId);
         const updatedBudget = updatedExpenses.reduce((acc, curr) => acc + curr.amount, 0);
         return {
           ...category,
@@ -274,8 +274,8 @@ function MainPage() {
           <button
             className="btn btn-danger btn-sm"
             onClick={() => {
-            console.log("Deleting expense with ID:", expense.id);
-            handleDeleteExpense(category.name, expense.id);
+            console.log("Deleting expense with ID:", expense._id);
+            handleDeleteExpense(category.name, expense._id);
             }}
 >
   Delete
