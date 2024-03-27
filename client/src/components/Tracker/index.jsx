@@ -4,6 +4,7 @@ import { QUERY_ME } from "../../utils/queries";
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import { ADD_INCOME } from "../../utils/mutations";
+
 import { ADD_EXPENSE } from "../../utils/mutations";
 
 
@@ -128,10 +129,11 @@ function MainPage() {
   };
 
   if (loading) return <p>LOADING...</p>;
-
+  
   return (
     <div className="background container mt-5">
       <div className="row">
+        {/* Income section */}
         <div className="col-md-6 d-flex">
           <div
             className="card flex-grow-1"
@@ -156,6 +158,8 @@ function MainPage() {
             </div>
           </div>
         </div>
+        
+        {/* Expenses section */}
         <div className="col-md-6 d-flex">
           <div
             className="card flex-grow-1"
@@ -212,6 +216,8 @@ function MainPage() {
           </div>
         </div>
       </div>
+      
+      {/* Budget Categories */}
       <div className="row mt-5">
         <div className="col-md-12">
           <h2>Budget Categories</h2>
@@ -239,15 +245,19 @@ function MainPage() {
                     handleChange(index, parseFloat(e.target.value))
                   }
                 />
+
                 <span className="input-group-text">
                   {((category.budget / income) * 100).toFixed(2)}%
                 </span>
+
               </div>
             </div>
           ))}
           <h4>Total Budget: {totalBudget}</h4>
         </div>
       </div>
+      
+      {/* Add New Category */}
       <div className="row mt-5">
         <div className="col-md-6">
           <div
@@ -278,6 +288,7 @@ function MainPage() {
                     })
                   }
                 />
+
                 <input
                   type="color"
                   className="form-control mt-2"
@@ -292,6 +303,7 @@ function MainPage() {
                 >
                   Add Category
                 </button>
+
               </div>
             </div>
           </div>
