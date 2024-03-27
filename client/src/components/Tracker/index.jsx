@@ -249,7 +249,7 @@ function MainPage() {
                 />
 
                 <span className="input-group-text">
-                  {((category.budget / income) * 100).toFixed(2)}%
+                  {((category.budget / {income}) * 100).toFixed(2)}%
                 </span>
 
               </div>
@@ -272,13 +272,6 @@ function MainPage() {
             placeholder="Category Name"
             value={newCategory.name}
             onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-          />
-          <input
-            type="number"
-            className="form-control mt-2"
-            placeholder="Budget"
-            value={newCategory.budget}
-            onChange={(e) => setNewCategory({ ...newCategory, budget: parseFloat(e.target.value) })}
           />
           <button className="btn btn-primary mt-2" onClick={handleAddCategory}>Add Category</button>
         </div>
