@@ -133,7 +133,7 @@ function MainPage() {
           >
             <div className="card-body d-flex flex-column justify-content-between">
               <h5 className="card-title">Expenses</h5>
-              <p className="card-text">Total Expenses: {expenseTotal}</p>
+              {/* <p className="card-text">Total Expenses: {expenseTotal}</p> */}
               <div className="mb-3">
                 <input
                   type="number"
