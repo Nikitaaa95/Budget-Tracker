@@ -119,7 +119,7 @@ function MainPage() {
     const { data } = await addExpense({
       variables: {
         amount: newExpense.amount,
-        label: newExpense.category
+        label: newExpense.category,
       },
     });
   
@@ -128,14 +128,17 @@ function MainPage() {
         return {
           ...category,
           budget: category.budget + newExpense.amount,
+          expenses: [...category.expenses, { id: data.addExpense.id, amount: newExpense.amount, note: newExpense.note }],
         };
       }
       return category;
     });
+  
     setCategories(updatedCategories);
-    setExpenses([...expenses, newExpense]);
+    setExpenses([...expenses, { id: data.addExpense.id, amount: newExpense.amount, label: newExpense.category, note: newExpense.note }]);
     setNewExpense({ amount: 0, category: "", note: "" });
   };
+  
   
     //   const updatedCategories = categories.map((category) => {
     //     if (category.name === newExpense.category) {
