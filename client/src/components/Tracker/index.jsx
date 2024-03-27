@@ -260,58 +260,33 @@ function MainPage() {
       </div>
       
       {/* Add New Category */}
-      <div className="row mt-5">
-        <div className="col-md-6">
-          <div
-            className="card"
-            style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}
-          >
-            <div className="card-body">
-              <h5 className="card-title">Add New Category</h5>
-              <div className="mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Category Name"
-                  value={newCategory.name}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, name: e.target.value })
-                  }
-                />
-                <input
-                  type="number"
-                  className="form-control mt-2"
-                  placeholder="Budget"
-                  value={newCategory.budget}
-                  onChange={(e) =>
-                    setNewCategory({
-                      ...newCategory,
-                      budget: parseFloat(e.target.value),
-                    })
-                  }
-                />
-
-                <input
-                  type="color"
-                  className="form-control mt-2"
-                  value={newCategory.color}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, color: e.target.value })
-                  }
-                />
-                <button
-                  className="btn btn-primary mt-2"
-                  onClick={handleAddCategory}
-                >
-                  Add Category
-                </button>
-
-              </div>
-            </div>
-          </div>
+<div className="row mt-5">
+  <div className="col-md-6">
+    <div className="card" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
+      <div className="card-body">
+        <h5 className="card-title">Add New Category</h5>
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Category Name"
+            value={newCategory.name}
+            onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+          />
+          <input
+            type="number"
+            className="form-control mt-2"
+            placeholder="Budget"
+            value={newCategory.budget}
+            onChange={(e) => setNewCategory({ ...newCategory, budget: parseFloat(e.target.value) })}
+          />
+          <button className="btn btn-primary mt-2" onClick={handleAddCategory}>Add Category</button>
         </div>
       </div>
     </div>
+  </div>
+</div>
+</div>
   );
 }
 
