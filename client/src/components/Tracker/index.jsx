@@ -90,7 +90,7 @@ function MainPage() {
     // Delete the expense from the backend
     await deleteExpense({
       variables: {
-        id: expenseId,
+        expenseId: expenseId,
       },
     });
     const updatedCategories = categories.map((category) => {
