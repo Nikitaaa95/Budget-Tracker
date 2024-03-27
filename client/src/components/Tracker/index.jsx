@@ -218,46 +218,51 @@ function MainPage() {
         </div>
       </div>
       
-      {/* Budget Categories */}
-      <div className="row mt-5">
-        <div className="col-md-12">
-          <h2>Budget Categories</h2>
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="mb-3"
-              style={{
-                backgroundColor: category.color,
-                padding: "10px",
-                color: "#fff",
-              }}
-            >
-              <label htmlFor={`category-${index}`} className="form-label">
-                {category.name}
-              </label>
-              <div className="input-group">
-                <input
-                  id={`category-${index}`}
-                  type="number"
-                  className="form-control"
-                  placeholder={`Enter budget for ${category.name}`}
-                  value={category.budget}
-                  onChange={(e) =>
-                    handleChange(index, parseFloat(e.target.value))
-                  }
-                />
-
-                <span className="input-group-text">
-                  {category.budgetPercentage}% 
-                </span>
-
-
-              </div>
-            </div>
-          ))}
-          <h4>Total Budget: {totalBudget}</h4>
+{/* Budget Categories */}
+<div className="row mt-5">
+  <div className="col-md-12">
+    <h2>Budget Categories</h2>
+    {categories.map((category, index) => (
+      <div
+        key={index}
+        className="mb-3"
+        style={{
+          backgroundColor: category.color,
+          padding: "10px",
+          color: "#fff",
+        }}
+      >
+        <label htmlFor={`category-${index}`} className="form-label">
+          {category.name}
+        </label>
+        <div className="input-group">
+          <input
+            id={`category-${index}`}
+            type="number"
+            className="form-control"
+            placeholder={`Enter budget for ${category.name}`}
+            value={category.budget}
+            onChange={(e) =>
+              handleChange(index, parseFloat(e.target.value))
+            }
+          />
+          <span className="input-group-text">
+            {category.budgetPercentage}% 
+          </span>
         </div>
+        {/* Render expenses for this category */}
+        <ul>
+          {category.expenses.map((expense, expenseIndex) => (
+            <li key={expenseIndex}>
+              {expense.label} - ${expense.amount}
+            </li>
+          ))}
+        </ul>
       </div>
+    ))}
+    <h4>Total Budget: {totalBudget}</h4>
+  </div>
+</div>
       
       {/* Add New Category */}
 <div className="row mt-5">
