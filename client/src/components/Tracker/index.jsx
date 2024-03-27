@@ -43,14 +43,6 @@ function MainPage() {
     setCategories(newCategories);
   };
 
-  // useEffect(() => {
-  //   console.log("use effect");
-  //   setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
-  //   setCategories(userData.expense.map((curr) =>{
-  //    return  { name: curr.label, budget: curr.amount, color: "#b27a03" }}
-  //     ));
-  //   console.log(income);
-  // }, []);
 
   useEffect(() => {
     console.log("use effect");
@@ -69,6 +61,13 @@ function MainPage() {
     // setTotalExpense(totalExpenseAmount); // Set the total expense amount
   }, [userData]); // Add userData as a dependency
 
+  useEffect(() => {
+    categories.forEach((category, index) => {
+      const newCategories = [...categories];
+      newCategories[index].budgetPercentage = ((category.budget / income) * 100).toFixed(2);
+      setCategories(newCategories);
+    });
+  }, [income]);
   // For each loop that we keep appending to array if it doesnt exist 
 
   const totalBudget = categories.reduce((acc, curr) => acc + curr.budget, 0);
@@ -123,10 +122,12 @@ function MainPage() {
     //   setNewExpense({ amount: 0, category: "", note: "" });
     // };
 
-  const handleAddCategory = () => {
-    setCategories([...categories, newCategory]);
-    setNewCategory({ name: "", budget: 0, color: "#ffffff" });
-  };
+    const handleAddCategory = () => {
+      const color = "#B27A03"; // Set the color to #B27A03
+      setCategories([...categories, { ...newCategory, color, budget: 0, expenses: [] }]);
+      setNewCategory({ name: "", budget: 0 });
+    };
+    
 
   if (loading) return <p>LOADING...</p>;
   
@@ -247,8 +248,9 @@ function MainPage() {
                 />
 
                 <span className="input-group-text">
-                  {((category.budget / income) * 100).toFixed(2)}%
+                  {category.budgetPercentage}% 
                 </span>
+
 
               </div>
             </div>
@@ -258,58 +260,26 @@ function MainPage() {
       </div>
       
       {/* Add New Category */}
-      <div className="row mt-5">
-        <div className="col-md-6">
-          <div
-            className="card"
-            style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}
-          >
-            <div className="card-body">
-              <h5 className="card-title">Add New Category</h5>
-              <div className="mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Category Name"
-                  value={newCategory.name}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, name: e.target.value })
-                  }
-                />
-                <input
-                  type="number"
-                  className="form-control mt-2"
-                  placeholder="Budget"
-                  value={newCategory.budget}
-                  onChange={(e) =>
-                    setNewCategory({
-                      ...newCategory,
-                      budget: parseFloat(e.target.value),
-                    })
-                  }
-                />
-
-                <input
-                  type="color"
-                  className="form-control mt-2"
-                  value={newCategory.color}
-                  onChange={(e) =>
-                    setNewCategory({ ...newCategory, color: e.target.value })
-                  }
-                />
-                <button
-                  className="btn btn-primary mt-2"
-                  onClick={handleAddCategory}
-                >
-                  Add Category
-                </button>
-
-              </div>
-            </div>
-          </div>
+<div className="row mt-5">
+  <div className="col-md-6">
+    <div className="card" style={{ backgroundColor: "#06293f", color: "#dbe8f8" }}>
+      <div className="card-body">
+        <h5 className="card-title">Add New Category</h5>
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Category Name"
+            value={newCategory.name}
+            onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+          />
+          <button className="btn btn-primary mt-2" onClick={handleAddCategory}>Add Category</button>
         </div>
       </div>
     </div>
+  </div>
+</div>
+</div>
   );
 }
 
