@@ -272,14 +272,16 @@ function MainPage() {
           </span>
         </div>
         {/* Render expenses for this category */}
-        <ul>
+        <ul className="list-group">
           {category.expenses.map((expense, expenseIndex) => (
-          <li key={expenseIndex}>
-          ${expense.amount}
+          <li key={expenseIndex} className="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            {expense.label} - ${expense.amount}
+          </div>
           <button
-            className="btn btn-danger btn-sm ms-2"
+            className="btn btn-danger btn-sm"
             onClick={() => handleDeleteExpense(category.name, expense.id)}
-          > Delete </button>
+        >Delete</button>
     </li>
   ))}
 </ul>
