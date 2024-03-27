@@ -254,7 +254,7 @@ function MainPage() {
         <ul>
           {category.expenses.map((expense, expenseIndex) => (
             <li key={expenseIndex}>
-              {expense.label} - ${expense.amount}
+              ${expense.amount}
             </li>
           ))}
         </ul>
