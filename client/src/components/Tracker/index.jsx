@@ -253,11 +253,16 @@ function MainPage() {
         {/* Render expenses for this category */}
         <ul>
           {category.expenses.map((expense, expenseIndex) => (
-            <li key={expenseIndex}>
-              ${expense.amount}
-            </li>
-          ))}
-        </ul>
+          <li key={expenseIndex}>
+          ${expense.amount}
+          <button
+            className="btn btn-danger btn-sm ms-2"
+            onClick={() => handleDeleteExpense(category.name, expense.id)}
+          > Delete </button>
+    </li>
+  ))}
+</ul>
+
       </div>
     ))}
     <h4>Total Budget: {totalBudget}</h4>
