@@ -123,10 +123,12 @@ function MainPage() {
     //   setNewExpense({ amount: 0, category: "", note: "" });
     // };
 
-  const handleAddCategory = () => {
-    setCategories([...categories, newCategory]);
-    setNewCategory({ name: "", budget: 0, color: "#ffffff" });
-  };
+    const handleAddCategory = () => {
+      const color = "#B27A03"; // Set the color to #B27A03
+      setCategories([...categories, { ...newCategory, color, budget: 0, expenses: [] }]);
+      setNewCategory({ name: "", budget: 0 });
+    };
+    
 
   if (loading) return <p>LOADING...</p>;
   
