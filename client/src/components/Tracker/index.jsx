@@ -3,8 +3,9 @@ import "../../App.css";
 import { QUERY_ME } from "../../utils/queries";
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
-import { ADD_INCOME, REMOVE_EXPENSE } from "../../utils/mutations";
+import { ADD_INCOME } from "../../utils/mutations";
 import { ADD_EXPENSE } from "../../utils/mutations";
+import { REMOVE_EXPENSE } from "../../utils/mutations";
 
 
 function MainPage() {
