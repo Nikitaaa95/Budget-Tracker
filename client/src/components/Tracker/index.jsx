@@ -34,7 +34,7 @@ function MainPage() {
 
   const [addIncome] = useMutation(ADD_INCOME);
   const [addExpense] = useMutation(ADD_EXPENSE);
-  const [deleteExpense] = useMutation(REMOVE_EXPENSE); // Import DELETE_EXPENSE from your mutations file
+  const [deleteExpense] = useMutation(REMOVE_EXPENSE); 
 
 
   const handleChange = (index, value) => {
@@ -93,6 +93,12 @@ function MainPage() {
         id: expenseId,
       },
     });
+  
+    // Remove the expense from the expenses state
+    const updatedExpenses = expenses.filter((expense) => expense.id !== expenseId);
+    setExpenses(updatedExpenses);
+  
+    // Update the categories state to reflect the deleted expense
     const updatedCategories = categories.map((category) => {
       if (category.name === categoryName) {
         return {
@@ -104,6 +110,8 @@ function MainPage() {
       return category;
     });
     setCategories(updatedCategories);
+  };
+  egories(updatedCategories);
   };
   
   
