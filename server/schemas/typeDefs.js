@@ -17,22 +17,23 @@ type Income {
   label: String
   amount: Int!
 }
-  type Query {
-    profiles: [Profile]!
-    profile(profileId: ID!): Profile
-    income(incomeId: ID!): Income
-    exepnse(expenseId: ID!): Expense 
-
-    # Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
-    me: Profile
-  }
-
-  type Expense {
+type Expense {
   _id: ID
   label: String!
   amount: Int!
   note: String
 }
+  type Query {
+    profiles: [Profile]!
+    profile(profileId: ID!): Profile
+    income(incomeId: ID!): Income
+    expense(expenseId: ID!): Expense
+
+    # Because we have the context functionality in place to check a JWT and decode its data, we can use a query that will always find and return the logged in user's data
+    me: Profile
+  }
+
+
 
   type Mutation {
     addProfile(name: String!, email: String!, password: String!): Auth

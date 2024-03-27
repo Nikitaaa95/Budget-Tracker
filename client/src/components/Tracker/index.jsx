@@ -3,8 +3,9 @@ import "../../App.css";
 import { QUERY_ME } from "../../utils/queries";
 import { useQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
-import { ADD_INCOME, REMOVE_EXPENSE } from "../../utils/mutations";
+import { ADD_INCOME } from "../../utils/mutations";
 import { ADD_EXPENSE } from "../../utils/mutations";
+import { REMOVE_EXPENSE } from "../../utils/mutations";
 
 
 function MainPage() {
@@ -88,14 +89,16 @@ function MainPage() {
 
   const handleDeleteExpense = async (categoryName, expenseId) => {
     // Delete the expense from the backend
+    console.log("Expense ID to delete:", expenseId);
+    
     await deleteExpense({
       variables: {
-        id: expenseId,
+        expenseId: expenseId, // Correct variable name
       },
     });
     const updatedCategories = categories.map((category) => {
       if (category.name === categoryName) {
-        const updatedExpenses = category.expenses.filter((expense) => expense.id !== expenseId);
+        const updatedExpenses = category.expenses.filter((expense) => expense._id !== expenseId);
         const updatedBudget = updatedExpenses.reduce((acc, curr) => acc + curr.amount, 0);
         return {
           ...category,
@@ -103,6 +106,7 @@ function MainPage() {
           budget: updatedBudget,
         };
       }
+      console.log(updatedExpenses)  
       return category;
     });
     setCategories(updatedCategories);
@@ -268,11 +272,19 @@ function MainPage() {
           <li key={expenseIndex} className="list-group-item d-flex justify-content-between align-items-center">
           <div>
             ${expense.amount}
+    
           </div>
           <button
             className="btn btn-danger btn-sm"
-            onClick={() => handleDeleteExpense(category.name, expense.id)}
-        >Delete</button>
+            onClick={() => {
+            console.log("Deleting expense with ID:", expense._id);
+            console.log(expense)
+            handleDeleteExpense(category.name, expense._id);
+            }}
+>
+  Delete
+</button>
+
     </li>
   ))}
 </ul>
