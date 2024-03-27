@@ -48,18 +48,18 @@ function MainPage() {
     console.log("use effect");
     setIncome(userData.income.reduce((acc, curr) => acc + curr.amount, 0));
     const uniqueLabels = [...new Set(userData.expense.map((curr) => curr.label))];
-    setCategories(
-      uniqueLabels.map((label) => ({
+    const updatedCategories = uniqueLabels.map((label) => {
+      const expensesForCategory = userData.expense.filter((expense) => expense.label === label);
+      return {
         name: label,
-        budget: userData.expense.filter((expense) => expense.label === label)
-                                  .reduce((acc, curr) => acc + curr.amount, 0),
+        budget: expensesForCategory.reduce((acc, curr) => acc + curr.amount, 0),
         color: "#B27A03",
-      }))
-    );
-    const totalExpenseAmount = categories.reduce((acc, curr) => acc + curr.budget, 0);
-    setExpenses(userData.expense); // Update expenses state
-    // setTotalExpense(totalExpenseAmount); // Set the total expense amount
+        expenses: expensesForCategory,
+      };
+    });
+    setCategories(updatedCategories);
   }, [userData]); // Add userData as a dependency
+  // Add userData as a dependency
 
   useEffect(() => {
     categories.forEach((category, index) => {
