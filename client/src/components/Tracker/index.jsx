@@ -88,10 +88,10 @@ function MainPage() {
 
   const handleDeleteExpense = async (categoryName, expenseId) => {
     // Delete the expense from the backend
-    console.log("Expense ID to delete:", expenseId)
+    console.log("Expense ID to delete:", expenseId);
     await deleteExpense({
       variables: {
-        expenseId: expenseId,
+        expenseId: expenseId, // Correct variable name
       },
     });
     const updatedCategories = categories.map((category) => {
