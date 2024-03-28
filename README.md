@@ -25,7 +25,5 @@ Yuval Nahmias: https://github.com/YuvNah
 
 Rong Si Deng: https://github.com/rosiedeng1
 
-Kateryna Redkina: https://github.com/KateRedkina
-
 ## License 
 Please refer to the LICENSE in the repo
